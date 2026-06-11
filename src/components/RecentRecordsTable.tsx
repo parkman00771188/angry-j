@@ -399,7 +399,17 @@ function RecordDetailModal({
         <section className="card max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto p-4 sm:max-h-[calc(100vh-5rem)] sm:p-5">
           <div className="mb-5 flex items-start justify-between gap-3">
             <div>
-              <h2 className="text-xl font-black text-slate-950 dark:text-white">기록 상세</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-black text-slate-950 dark:text-white">기록 상세</h2>
+                <button
+                  type="button"
+                  onClick={onEdit}
+                  aria-label="기록 수정"
+                  className="icon-button h-9 w-9"
+                >
+                  <Pencil className="h-4 w-4" />
+                </button>
+              </div>
               <p className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">
                 {formatRecordDate(record.startTime, dateTimeFormat)} {formatTime(record.startTime)}
               </p>
@@ -430,9 +440,6 @@ function RecordDetailModal({
           <div className="mt-5 flex justify-end gap-2">
             <button type="button" onClick={onClose} className="secondary-button px-5">
               닫기
-            </button>
-            <button type="button" onClick={onEdit} className="primary-button px-5">
-              수정
             </button>
           </div>
         </section>
