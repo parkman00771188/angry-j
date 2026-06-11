@@ -1,0 +1,9 @@
+node_modules/
+dist/
+build/
+release/
+*.log
+*.png
+!src/assets/*.png
+.wrangler/
+.dev.vars

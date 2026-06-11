@@ -1,0 +1,59 @@
+{
+  "name": "angry-j",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "desktop/electron-main.cjs",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit -p tsconfig.json && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "pages:dev": "npm run build && wrangler pages dev dist",
+    "pages:deploy": "npm run build && wrangler pages deploy dist --project-name angry-j",
+    "d1:migrate:local": "wrangler d1 migrations apply angry-j --local",
+    "d1:migrate:remote": "wrangler d1 migrations apply angry-j --remote",
+    "exe:build": "powershell -ExecutionPolicy Bypass -File ./build-electron-folder.ps1",
+    "electron:dev": "npm run build && powershell -NoProfile -Command \"$env:ELECTRON_RUN_AS_NODE=$null; npx electron .\"",
+    "electron:build": "npm run build && powershell -NoProfile -Command \"$env:ELECTRON_RUN_AS_NODE=$null; npx electron-builder --win portable --x64\"",
+    "py:exe:build": "powershell -ExecutionPolicy Bypass -File ./build-exe.ps1"
+  },
+  "dependencies": {
+    "lucide-react": "^1.17.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "recharts": "^3.8.1"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.0.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "autoprefixer": "^10.4.20",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2",
+    "vite": "^8.0.16",
+    "wrangler": "^4.49.0"
+  },
+  "build": {
+    "appId": "kr.angryj.desktop",
+    "productName": "AngryJ",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "desktop/electron-main.cjs",
+      "src/assets/angryJ logo.png",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "artifactName": "AngryJ.exe"
+    }
+  }
+}
