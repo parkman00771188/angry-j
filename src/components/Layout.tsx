@@ -10,7 +10,7 @@ type LayoutProps = {
   rangeMode: RangeMode;
   resolvedTheme: ResolvedTheme;
   onViewChange: (view: AppView) => void;
-  onRangeChange: (range: DateRange) => void;
+  onRangeChange: (range: DateRange, anchorValue?: string | Date) => void;
   onRangeModeChange: (mode: RangeMode) => void;
   onThemeToggle: () => void;
 };

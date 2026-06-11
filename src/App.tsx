@@ -10,6 +10,7 @@ import {
   RECORDS_KEY,
   SETTINGS_KEY,
   THEME_KEY,
+  dateInputValue,
   defaultDateRange,
   getStoredTheme,
   rangeFromMode,
@@ -65,6 +66,22 @@ function normalizeSharedState(state: SharedState | null) {
   };
 }
 
+function normalizeRangeAnchor(value?: string | Date, fallback = dateInputValue(new Date())) {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? fallback : dateInputValue(value);
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    const dateValue = /^\d{4}-\d{2}$/.test(trimmed) ? `${trimmed}-01` : trimmed.slice(0, 10);
+    const date = new Date(`${dateValue}T00:00:00`);
+
+    return Number.isNaN(date.getTime()) ? fallback : dateInputValue(date);
+  }
+
+  return fallback;
+}
+
 function App() {
   const [view, setView] = useState<AppView>("dashboard");
   const [records, setRecords] = useState<AngerEpisodeRecord[]>(() => readJson(RECORDS_KEY, []));
@@ -72,6 +89,8 @@ function App() {
   const [theme, setTheme] = useState<ThemePreference>(() => getStoredTheme(localStorage.getItem(THEME_KEY)));
   const [settings, setSettings] = useState<AppSettings>(() => readJson(SETTINGS_KEY, DEFAULT_SETTINGS));
   const [range, setRange] = useState<DateRange>(defaultDateRange);
+  const [customRange, setCustomRange] = useState<DateRange>(defaultDateRange);
+  const [rangeAnchor, setRangeAnchor] = useState(() => dateInputValue(new Date()));
   const [rangeMode, setRangeMode] = useState<RangeMode>("custom");
   const [toast, setToast] = useState("");
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => resolveTheme(theme));
@@ -277,14 +296,27 @@ function App() {
     setToast(`${ids.length}개 기록이 삭제되었습니다.`);
   };
 
+  const changeRange = (nextRange: DateRange, anchorValue?: string | Date) => {
+    setRange(nextRange);
+
+    if (rangeMode === "custom") {
+      setCustomRange(nextRange);
+    }
+
+    setRangeAnchor((current) => normalizeRangeAnchor(anchorValue ?? nextRange.end, current));
+  };
+
   const changeRangeMode = (mode: RangeMode) => {
     setRangeMode(mode);
 
     if (mode === "custom") {
+      setRange(customRange);
+      setRangeAnchor((current) => normalizeRangeAnchor(customRange.end, current));
       return;
     }
 
-    const anchor = new Date(`${range.end}T00:00:00`);
+    const anchorValue = normalizeRangeAnchor(rangeAnchor);
+    const anchor = new Date(`${anchorValue}T00:00:00`);
     setRange(rangeFromMode(mode, Number.isNaN(anchor.getTime()) ? new Date() : anchor));
   };
 
@@ -300,7 +332,7 @@ function App() {
         rangeMode={rangeMode}
         resolvedTheme={resolvedTheme}
         onViewChange={setView}
-        onRangeChange={setRange}
+        onRangeChange={changeRange}
         onRangeModeChange={changeRangeMode}
         onThemeToggle={toggleTheme}
       >

@@ -9,7 +9,7 @@ type HeaderProps = {
   range: DateRange;
   rangeMode: RangeMode;
   resolvedTheme: ResolvedTheme;
-  onRangeChange: (range: DateRange) => void;
+  onRangeChange: (range: DateRange, anchorValue?: string | Date) => void;
   onRangeModeChange: (mode: RangeMode) => void;
   onThemeToggle: () => void;
 };
@@ -66,42 +66,43 @@ function Header({
   }, []);
 
   const updateRange = (key: keyof DateRange, value: string) => {
-    onRangeChange({ ...range, [key]: value });
+    const nextRange = { ...range, [key]: value };
+    onRangeChange(nextRange, nextRange.end);
   };
 
   const applyToday = () => {
     const now = new Date();
 
     if (rangeMode === "day") {
-      onRangeChange(dayRangeFrom(now));
+      onRangeChange(dayRangeFrom(now), now);
       return;
     }
 
     if (rangeMode === "week") {
-      onRangeChange(weekRangeFrom(now));
+      onRangeChange(weekRangeFrom(now), now);
       return;
     }
 
     if (rangeMode === "month") {
-      onRangeChange(monthRangeFrom(now));
+      onRangeChange(monthRangeFrom(now), now);
       return;
     }
 
-    onRangeChange(todayRange());
+    onRangeChange(todayRange(), now);
   };
 
   const handlePrimaryDateChange = (value: string) => {
     if (rangeMode === "day") {
-      onRangeChange(dayRangeFrom(value));
+      onRangeChange(dayRangeFrom(value), value);
       return;
     }
 
     if (rangeMode === "week") {
-      onRangeChange(weekRangeFrom(value));
+      onRangeChange(weekRangeFrom(value), value);
       return;
     }
 
-    onRangeChange(monthRangeFrom(value));
+    onRangeChange(monthRangeFrom(value), value);
   };
 
   const copy = headerCopy[view];
