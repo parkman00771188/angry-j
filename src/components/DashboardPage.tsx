@@ -119,8 +119,11 @@ function MobileRecordInputModal({
 }) {
   return createPortal(
     <div className="fixed inset-0 z-[1000] overflow-y-auto bg-slate-950/45 px-3 py-5 backdrop-blur-sm md:hidden">
-      <div className="flex min-h-full items-start justify-center" onClick={onClose}>
-        <div className="relative w-full max-w-lg" onClick={(event) => event.stopPropagation()}>
+      <div className="flex min-h-full items-center justify-center" onClick={onClose}>
+        <div
+          className="relative max-h-[calc(100vh-2.5rem)] w-full max-w-lg overflow-y-auto"
+          onClick={(event) => event.stopPropagation()}
+        >
           <button
             type="button"
             onClick={onClose}

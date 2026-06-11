@@ -102,7 +102,7 @@ function EditRecordModal({ record, causes, onClose, onUpdate, onDelete, allowDel
 
   const modal = (
     <div className="fixed inset-0 z-[1000] overflow-y-auto bg-slate-950/45 px-4 py-6 backdrop-blur-sm sm:py-10">
-      <div className="flex min-h-full items-start justify-center sm:items-center">
+      <div className="flex min-h-full items-center justify-center">
         <section className="card max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto p-4 sm:max-h-[calc(100vh-5rem)] sm:p-5">
         <div className="mb-5 flex items-start justify-between gap-3">
           <div>

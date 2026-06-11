@@ -136,7 +136,7 @@ function Header({
           <button
             type="button"
             onClick={onMobileRecordInputOpen}
-            className="absolute right-0 top-0 inline-flex items-center justify-center gap-1.5 rounded-[14px] bg-[#0d66ff] px-3.5 py-2.5 text-xs font-black text-white shadow-[0_12px_24px_rgba(37,99,235,0.28)] transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 md:hidden"
+            className="absolute right-0 top-0 inline-flex min-h-12 items-center justify-center gap-1.5 rounded-[14px] bg-[#0d66ff] px-4 py-3 text-sm font-black text-white shadow-[0_12px_24px_rgba(37,99,235,0.28)] transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 md:hidden"
           >
             <PenLine className="h-4 w-4" />
             기록하기
