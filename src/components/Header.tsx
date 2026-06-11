@@ -146,7 +146,8 @@ function Header({
 
       <div className="flex w-full min-w-0 flex-col items-stretch gap-3 pt-1 xl:w-auto xl:items-end">
         {showRangeControls ? (
-          <div className="grid w-full grid-cols-4 rounded-[14px] border border-[#d4e1f2] bg-white p-1 shadow-[0_10px_24px_rgba(30,86,180,0.10)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:inline-grid sm:w-auto">
+          <div className="flex w-full min-w-0 items-center gap-2 sm:justify-end">
+          <div className="grid min-w-0 flex-1 grid-cols-4 rounded-[14px] border border-[#d4e1f2] bg-white p-1 shadow-[0_10px_24px_rgba(30,86,180,0.10)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:flex-none">
             {rangeModes.map((item) => (
               <button
                 key={item.key}
@@ -161,6 +162,16 @@ function Header({
                 {item.label}
               </button>
             ))}
+          </div>
+          <button
+            type="button"
+            aria-label={resolvedTheme === "dark" ? "라이트 테마로 변경" : "다크 테마로 변경"}
+            title={resolvedTheme === "dark" ? "라이트 테마로 변경" : "다크 테마로 변경"}
+            onClick={onThemeToggle}
+            className="icon-button hidden h-11 w-11 rounded-[14px] md:inline-flex"
+          >
+            <ThemeIcon className="h-5 w-5" />
+          </button>
           </div>
         ) : null}
 
@@ -206,7 +217,7 @@ function Header({
             </div>
           ) : null}
 
-          {showRangeControls ? (
+          {showRangeControls && rangeMode === "day" ? (
             <button
               type="button"
               onClick={applyToday}
@@ -221,7 +232,7 @@ function Header({
             aria-label="테마 변경"
             title={resolvedTheme === "dark" ? "라이트 테마로 변경" : "다크 테마로 변경"}
             onClick={onThemeToggle}
-            className="icon-button h-12 w-12 rounded-[14px]"
+            className="hidden"
           >
             <ThemeIcon className="h-5 w-5" />
           </button>

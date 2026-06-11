@@ -1,10 +1,12 @@
-import { ClipboardList, Home, Settings } from "lucide-react";
+import { ClipboardList, Home, Moon, Settings, Sun } from "lucide-react";
 import angryCharacter from "../assets/angry-character.png";
-import { AppView } from "../types";
+import { AppView, ResolvedTheme } from "../types";
 
 type SidebarProps = {
   view: AppView;
+  resolvedTheme: ResolvedTheme;
   onViewChange: (view: AppView) => void;
+  onThemeToggle: () => void;
 };
 
 const menu = [
@@ -13,7 +15,9 @@ const menu = [
   { key: "settings" as const, label: "설정", icon: Settings },
 ];
 
-function Sidebar({ view, onViewChange }: SidebarProps) {
+function Sidebar({ view, resolvedTheme, onViewChange, onThemeToggle }: SidebarProps) {
+  const ThemeIcon = resolvedTheme === "dark" ? Sun : Moon;
+
   return (
     <>
       <div className="sticky top-0 z-40 w-full overflow-hidden border-b border-blue-500/20 bg-blue-700 px-3 py-2.5 text-white shadow-lg dark:border-white/[0.08] dark:bg-[#071426] lg:hidden">
@@ -45,6 +49,14 @@ function Sidebar({ view, onViewChange }: SidebarProps) {
                 </button>
               );
             })}
+            <button
+              type="button"
+              aria-label={resolvedTheme === "dark" ? "라이트 테마로 변경" : "다크 테마로 변경"}
+              onClick={onThemeToggle}
+              className="grid h-9 w-9 place-items-center rounded-xl text-blue-100 transition hover:bg-white/10 dark:text-slate-300 dark:hover:bg-white/[0.07] sm:h-10 sm:w-10"
+            >
+              <ThemeIcon className="h-5 w-5" />
+            </button>
           </div>
         </div>
       </div>

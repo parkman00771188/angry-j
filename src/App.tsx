@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import DashboardPage from "./components/DashboardPage";
+import DeletePasswordModal from "./components/DeletePasswordModal";
 import Layout from "./components/Layout";
 import RecordsPage from "./components/RecordsPage";
 import SettingsPage from "./components/SettingsPage";
@@ -93,6 +94,7 @@ function App() {
   const [rangeAnchor, setRangeAnchor] = useState(() => dateInputValue(new Date()));
   const [rangeMode, setRangeMode] = useState<RangeMode>("custom");
   const [mobileRecorderOpen, setMobileRecorderOpen] = useState(false);
+  const [settingsPasswordOpen, setSettingsPasswordOpen] = useState(false);
   const [toast, setToast] = useState("");
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => resolveTheme(theme));
   const [sharedReady, setSharedReady] = useState(false);
@@ -326,7 +328,14 @@ function App() {
   };
 
   const changeView = (nextView: AppView) => {
+    if (nextView === "settings" && view !== "settings") {
+      setMobileRecorderOpen(false);
+      setSettingsPasswordOpen(true);
+      return;
+    }
+
     setView(nextView);
+    setSettingsPasswordOpen(false);
 
     if (nextView !== "dashboard") {
       setMobileRecorderOpen(false);
@@ -387,6 +396,19 @@ function App() {
         <div className="fixed right-5 top-5 z-50 rounded-2xl border border-emerald-200 bg-white px-4 py-3 text-sm font-bold text-emerald-700 shadow-[0_18px_55px_rgba(15,23,42,0.18)] dark:border-emerald-400/20 dark:bg-[#0b1220] dark:text-emerald-300">
           {toast}
         </div>
+      ) : null}
+
+      {settingsPasswordOpen ? (
+        <DeletePasswordModal
+          title="설정 잠금 해제"
+          description="설정으로 이동하려면 비밀번호를 입력하세요."
+          confirmLabel="확인"
+          onCancel={() => setSettingsPasswordOpen(false)}
+          onConfirm={() => {
+            setSettingsPasswordOpen(false);
+            setView("settings");
+          }}
+        />
       ) : null}
     </div>
   );
