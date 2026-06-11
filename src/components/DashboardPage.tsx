@@ -1,4 +1,6 @@
 import { useMemo } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 import {
   getPreviousDateRange,
   getRecordsByDateRange,
@@ -23,6 +25,8 @@ type DashboardPageProps = {
   onUpdateRecord: (record: AngerEpisodeRecord) => void;
   onDeleteRecord: (id: string) => void;
   onDeleteRecords: (ids: string[]) => void;
+  mobileRecorderOpen: boolean;
+  onMobileRecorderClose: () => void;
   onViewAllRecords: () => void;
 };
 
@@ -36,6 +40,8 @@ function DashboardPage({
   onUpdateRecord,
   onDeleteRecord,
   onDeleteRecords,
+  mobileRecorderOpen,
+  onMobileRecorderClose,
   onViewAllRecords,
 }: DashboardPageProps) {
   const visibleRecords = useMemo(() => getRecordsByDateRange(records, range), [records, range]);
@@ -47,7 +53,9 @@ function DashboardPage({
   return (
     <div className="min-w-0 space-y-4">
       <section className="grid min-w-0 items-start gap-4 2xl:grid-cols-[minmax(520px,0.56fr)_minmax(0,1.44fr)]">
-        <RecordInputCard causes={causes} settings={settings} onCreateRecord={onCreateRecord} />
+        <div className="hidden md:block">
+          <RecordInputCard causes={causes} settings={settings} onCreateRecord={onCreateRecord} />
+        </div>
         <div className="min-w-0 space-y-4">
           <StatCards
             records={visibleRecords}
@@ -82,7 +90,50 @@ function DashboardPage({
         allowDelete={false}
         onViewAll={onViewAllRecords}
       />
+
+      {mobileRecorderOpen ? (
+        <MobileRecordInputModal
+          causes={causes}
+          settings={settings}
+          onCreateRecord={(record) => {
+            onCreateRecord(record);
+            onMobileRecorderClose();
+          }}
+          onClose={onMobileRecorderClose}
+        />
+      ) : null}
     </div>
+  );
+}
+
+function MobileRecordInputModal({
+  causes,
+  settings,
+  onCreateRecord,
+  onClose,
+}: {
+  causes: CauseOption[];
+  settings: AppSettings;
+  onCreateRecord: (record: AngerEpisodeRecord) => void;
+  onClose: () => void;
+}) {
+  return createPortal(
+    <div className="fixed inset-0 z-[1000] overflow-y-auto bg-slate-950/45 px-3 py-5 backdrop-blur-sm md:hidden">
+      <div className="flex min-h-full items-start justify-center" onClick={onClose}>
+        <div className="relative w-full max-w-lg" onClick={(event) => event.stopPropagation()}>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="기록 입력 닫기"
+            className="icon-button absolute right-3 top-3 z-10 h-9 w-9"
+          >
+            <X className="h-4 w-4" />
+          </button>
+          <RecordInputCard causes={causes} settings={settings} onCreateRecord={onCreateRecord} />
+        </div>
+      </div>
+    </div>,
+    document.body,
   );
 }
 

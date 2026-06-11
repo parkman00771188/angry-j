@@ -92,6 +92,7 @@ function App() {
   const [customRange, setCustomRange] = useState<DateRange>(defaultDateRange);
   const [rangeAnchor, setRangeAnchor] = useState(() => dateInputValue(new Date()));
   const [rangeMode, setRangeMode] = useState<RangeMode>("custom");
+  const [mobileRecorderOpen, setMobileRecorderOpen] = useState(false);
   const [toast, setToast] = useState("");
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => resolveTheme(theme));
   const [sharedReady, setSharedReady] = useState(false);
@@ -324,6 +325,14 @@ function App() {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
+  const changeView = (nextView: AppView) => {
+    setView(nextView);
+
+    if (nextView !== "dashboard") {
+      setMobileRecorderOpen(false);
+    }
+  };
+
   return (
     <div className="theme-glow min-h-screen">
       <Layout
@@ -331,10 +340,11 @@ function App() {
         range={range}
         rangeMode={rangeMode}
         resolvedTheme={resolvedTheme}
-        onViewChange={setView}
+        onViewChange={changeView}
         onRangeChange={changeRange}
         onRangeModeChange={changeRangeMode}
         onThemeToggle={toggleTheme}
+        onMobileRecordInputOpen={() => setMobileRecorderOpen(true)}
       >
         {view === "dashboard" ? (
           <DashboardPage
@@ -347,7 +357,9 @@ function App() {
             onUpdateRecord={updateRecord}
             onDeleteRecord={deleteRecord}
             onDeleteRecords={deleteRecords}
-            onViewAllRecords={() => setView("records")}
+            mobileRecorderOpen={mobileRecorderOpen}
+            onMobileRecorderClose={() => setMobileRecorderOpen(false)}
+            onViewAllRecords={() => changeView("records")}
           />
         ) : view === "records" ? (
           <RecordsPage

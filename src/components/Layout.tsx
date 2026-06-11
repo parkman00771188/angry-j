@@ -13,6 +13,7 @@ type LayoutProps = {
   onRangeChange: (range: DateRange, anchorValue?: string | Date) => void;
   onRangeModeChange: (mode: RangeMode) => void;
   onThemeToggle: () => void;
+  onMobileRecordInputOpen?: () => void;
 };
 
 function Layout({
@@ -25,6 +26,7 @@ function Layout({
   onRangeChange,
   onRangeModeChange,
   onThemeToggle,
+  onMobileRecordInputOpen,
 }: LayoutProps) {
   return (
     <div className="min-h-screen lg:flex">
@@ -38,6 +40,7 @@ function Layout({
           onRangeChange={onRangeChange}
           onRangeModeChange={onRangeModeChange}
           onThemeToggle={onThemeToggle}
+          onMobileRecordInputOpen={onMobileRecordInputOpen}
         />
         {children}
       </main>
