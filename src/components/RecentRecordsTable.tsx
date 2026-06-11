@@ -112,7 +112,7 @@ function RecentRecordsTable({
 
       {sorted.length ? (
         <>
-        <div className="space-y-3 px-4 pb-4 pt-3 md:hidden">
+        <div className="space-y-3 px-4 pb-4 pt-3 lg:hidden">
           {displayedRecords.map((record) => {
             const selected = selectedIds.includes(record.id);
             const recordCauses = getRecordCauses(record);
@@ -183,7 +183,7 @@ function RecentRecordsTable({
           })}
         </div>
 
-        <div className="hidden overflow-x-auto px-5 pb-5 pt-3 md:block">
+        <div className="hidden overflow-x-auto px-5 pb-5 pt-3 lg:block">
           <table className="w-full min-w-[1040px] text-left text-sm">
             <thead className="rounded-xl bg-[#f7faff] text-xs font-black text-[#52698c] dark:bg-white/[0.04] dark:text-slate-300">
               <tr>

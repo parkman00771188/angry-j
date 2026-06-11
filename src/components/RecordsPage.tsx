@@ -26,12 +26,13 @@ function RecordsPage({
 
   return (
     <div className="space-y-4">
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
         <SummaryCard label="선택 기간 기록" value={`${visibleRecords.length}개`} />
         <SummaryCard label="전체 저장 기록" value={`${records.length}개`} />
         <SummaryCard
           label="가장 최근 기록"
           value={records[0] ? new Date(records[0].startTime).toLocaleDateString("ko-KR") : "-"}
+          compactValue
         />
       </section>
 
@@ -47,11 +48,17 @@ function RecordsPage({
   );
 }
 
-function SummaryCard({ label, value }: { label: string; value: string }) {
+function SummaryCard({ label, value, compactValue = false }: { label: string; value: string; compactValue?: boolean }) {
   return (
-    <article className="card p-5">
-      <p className="text-sm font-black text-[#52698c] dark:text-slate-400">{label}</p>
-      <p className="mt-2 text-3xl font-black tracking-tight text-slate-950 dark:text-white">{value}</p>
+    <article className="card flex min-h-[118px] min-w-0 flex-col justify-between p-3 sm:min-h-[132px] sm:p-4 lg:min-h-[150px] lg:p-5">
+      <p className="break-keep text-xs font-black leading-5 text-[#52698c] dark:text-slate-400 sm:text-sm">{label}</p>
+      <p
+        className={`mt-2 break-words font-black tracking-tight text-slate-950 dark:text-white ${
+          compactValue ? "text-[17px] leading-tight sm:text-2xl" : "text-[30px] leading-none sm:text-3xl"
+        }`}
+      >
+        {value}
+      </p>
     </article>
   );
 }

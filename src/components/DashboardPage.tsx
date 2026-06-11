@@ -53,7 +53,7 @@ function DashboardPage({
   return (
     <div className="min-w-0 space-y-4">
       <section className="grid min-w-0 items-start gap-4 2xl:grid-cols-[minmax(520px,0.56fr)_minmax(0,1.44fr)]">
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <RecordInputCard causes={causes} settings={settings} onCreateRecord={onCreateRecord} />
         </div>
         <div className="min-w-0 space-y-4">
@@ -118,7 +118,7 @@ function MobileRecordInputModal({
   onClose: () => void;
 }) {
   return createPortal(
-    <div className="fixed inset-0 z-[1000] overflow-y-auto bg-slate-950/45 px-3 py-5 backdrop-blur-sm md:hidden">
+    <div className="fixed inset-0 z-[1000] overflow-y-auto bg-slate-950/45 px-3 py-5 backdrop-blur-sm lg:hidden">
       <div className="flex min-h-full items-center justify-center" onClick={onClose}>
         <div
           className="relative max-h-[calc(100vh-2.5rem)] w-full max-w-lg overflow-y-auto"
