@@ -53,6 +53,18 @@ Cloudflare Pages 배포:
 npm run cf:deploy
 ```
 
+로컬 EXE/데스크톱 앱의 기존 기록을 Cloudflare D1로 가져오기:
+
+```powershell
+npm run cf:import-local
+```
+
+기본 경로는 `%APPDATA%\angry-j-desktop\anger-j-shared-state.json`입니다. 다른 파일을 가져오려면:
+
+```powershell
+npm run cf:import-local -- "C:\path\to\anger-j-shared-state.json"
+```
+
 ## 자동 배포
 
 `.github/workflows/cloudflare-pages.yml`가 `main` 브랜치 push마다 아래 작업을 자동으로 실행합니다.
