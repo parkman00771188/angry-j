@@ -103,7 +103,7 @@ function EditRecordModal({ record, causes, onClose, onUpdate, onDelete, allowDel
   const modal = (
     <div className="fixed inset-0 z-[1000] overflow-y-auto bg-slate-950/45 px-4 py-6 backdrop-blur-sm sm:py-10">
       <div className="flex min-h-full items-start justify-center sm:items-center">
-        <section className="card max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto p-5 sm:max-h-[calc(100vh-5rem)]">
+        <section className="card max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto p-4 sm:max-h-[calc(100vh-5rem)] sm:p-5">
         <div className="mb-5 flex items-start justify-between gap-3">
           <div>
             <h2 className="text-xl font-black text-slate-950 dark:text-white">기록 수정</h2>
@@ -257,12 +257,12 @@ function DateTimeField({
   return (
     <fieldset className="block">
       <legend className="text-sm font-black text-slate-700 dark:text-slate-200">{label}</legend>
-      <div className="mt-2 grid grid-cols-[minmax(0,1fr)_86px_86px_86px] gap-2 max-sm:grid-cols-2">
+      <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-[minmax(0,1fr)_86px_86px_86px]">
         <input
           type="date"
           value={value.date}
           onChange={(event) => update("date", event.target.value)}
-          className="soft-input w-full max-sm:col-span-2"
+          className="soft-input col-span-3 w-full sm:col-span-1"
         />
         <select
           aria-label={`${label} 시`}

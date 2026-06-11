@@ -60,18 +60,18 @@ function StatCards({ records, previousRecords }: StatCardsProps) {
   ];
 
   return (
-    <section className="grid items-start gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
+    <section className="grid grid-cols-2 items-start gap-3 sm:gap-4 xl:grid-cols-3 2xl:grid-cols-5">
       {cards.map((card) => {
         const Icon = card.icon;
         return (
-          <article key={card.title} className="card min-h-[156px] p-5">
+          <article key={card.title} className="card min-h-[132px] p-3.5 last:col-span-2 sm:min-h-[156px] sm:p-5 sm:last:col-span-1">
             <div
-              className={`mb-4 grid h-[52px] w-[52px] place-items-center rounded-[18px] ${toneClasses[card.tone]}`}
+              className={`mb-3 grid h-11 w-11 place-items-center rounded-[16px] sm:mb-4 sm:h-[52px] sm:w-[52px] sm:rounded-[18px] ${toneClasses[card.tone]}`}
             >
-              <Icon className="h-7 w-7" />
+              <Icon className="h-5 w-5 sm:h-7 sm:w-7" />
             </div>
-            <p className="min-h-10 text-sm font-black leading-5 text-[#24385e] dark:text-slate-300">{card.title}</p>
-            <p className="mt-2 text-[27px] font-black tracking-tight text-slate-950 dark:text-white">
+            <p className="min-h-9 text-xs font-black leading-4 text-[#24385e] dark:text-slate-300 sm:min-h-10 sm:text-sm sm:leading-5">{card.title}</p>
+            <p className="mt-2 break-words text-[22px] font-black tracking-tight text-slate-950 dark:text-white sm:text-[27px]">
               {card.value}
             </p>
             <p

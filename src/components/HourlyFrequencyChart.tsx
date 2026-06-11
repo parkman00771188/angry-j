@@ -16,7 +16,7 @@ function HourlyFrequencyChart({ records, theme }: HourlyFrequencyChartProps) {
   return (
     <ChartCard title="시간대별 기록 빈도 (기록 수)" description="오전 8시부터 오후 8시까지 1시간 단위로 집계됩니다.">
       {records.length ? (
-        <div className="h-56">
+        <div className="h-48 sm:h-56">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} margin={{ top: 18, right: 8, bottom: 0, left: -12 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chart.grid} />

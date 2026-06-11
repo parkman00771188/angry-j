@@ -45,15 +45,15 @@ function DashboardPage({
   );
 
   return (
-    <div className="space-y-4">
-      <section className="grid items-start gap-4 2xl:grid-cols-[minmax(520px,0.56fr)_minmax(0,1.44fr)]">
+    <div className="min-w-0 space-y-4">
+      <section className="grid min-w-0 items-start gap-4 2xl:grid-cols-[minmax(520px,0.56fr)_minmax(0,1.44fr)]">
         <RecordInputCard causes={causes} settings={settings} onCreateRecord={onCreateRecord} />
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
           <StatCards
             records={visibleRecords}
             previousRecords={previousRecords}
           />
-          <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(360px,0.86fr)]">
+          <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(360px,0.86fr)]">
             <DailyTrendChart records={visibleRecords} range={range} theme={resolvedTheme} />
             <HourlyFrequencyChart records={visibleRecords} theme={resolvedTheme} />
             <WeekdayHeatmap records={visibleRecords} theme={resolvedTheme} />
@@ -61,7 +61,7 @@ function DashboardPage({
         </div>
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-[minmax(420px,0.76fr)_minmax(0,1.24fr)]">
+      <section className="grid min-w-0 gap-4 xl:grid-cols-[minmax(420px,0.76fr)_minmax(0,1.24fr)]">
         <CauseDonutChart records={visibleRecords} causes={causes} theme={resolvedTheme} />
         <EpisodeLengthChart
           records={visibleRecords}

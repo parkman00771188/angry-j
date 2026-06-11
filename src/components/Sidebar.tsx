@@ -16,16 +16,16 @@ const menu = [
 function Sidebar({ view, onViewChange }: SidebarProps) {
   return (
     <>
-      <div className="sticky top-0 z-40 w-screen max-w-full overflow-hidden border-b border-blue-500/20 bg-blue-700 px-3 py-3 text-white shadow-lg dark:border-white/[0.08] dark:bg-[#071426] lg:hidden">
+      <div className="sticky top-0 z-40 w-full overflow-hidden border-b border-blue-500/20 bg-blue-700 px-3 py-2.5 text-white shadow-lg dark:border-white/[0.08] dark:bg-[#071426] lg:hidden">
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2">
-            <img src={angryCharacter} alt="" className="h-11 w-11 shrink-0 rounded-2xl object-cover object-top" />
-            <div>
+            <img src={angryCharacter} alt="" className="h-10 w-10 shrink-0 rounded-2xl object-cover object-top sm:h-11 sm:w-11" />
+            <div className="min-w-0">
               <p className="text-sm font-black tracking-tight sm:text-base">앵그리 J</p>
               <p className="text-xs font-semibold text-blue-100">마음케어</p>
             </div>
           </div>
-          <div className="mr-8 flex shrink-0 rounded-2xl bg-white/12 p-1 sm:mr-0">
+          <div className="flex shrink-0 rounded-2xl bg-white/12 p-1">
             {menu.map((item) => {
               const Icon = item.icon;
               const active = item.key === view;

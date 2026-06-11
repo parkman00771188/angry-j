@@ -87,14 +87,14 @@ function RecentRecordsTable({
 
   return (
     <section className="card overflow-hidden">
-      <div className="flex items-center justify-between border-b border-[#d8e5f5] px-6 py-4 dark:border-white/[0.08]">
+      <div className="flex flex-col gap-3 border-b border-[#d8e5f5] px-4 py-4 dark:border-white/[0.08] sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div className="flex flex-wrap items-baseline gap-3">
           <h2 className="text-xl font-black text-slate-950 dark:text-white">최근 기록</h2>
           <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
             저장된 기록은 언제든지 수정할 수 있습니다.
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex w-full shrink-0 items-center justify-end gap-2 sm:w-auto">
         {onViewAll ? (
           <button type="button" onClick={onViewAll} className="secondary-button px-4 py-2 text-xs">
             전체보기
@@ -111,7 +111,79 @@ function RecentRecordsTable({
       </div>
 
       {sorted.length ? (
-        <div className="overflow-x-auto px-5 pb-5 pt-3">
+        <>
+        <div className="space-y-3 px-4 pb-4 pt-3 md:hidden">
+          {displayedRecords.map((record) => {
+            const selected = selectedIds.includes(record.id);
+            const recordCauses = getRecordCauses(record);
+
+            return (
+              <article
+                key={record.id}
+                tabIndex={0}
+                onClick={() => setViewingRecord(record)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setViewingRecord(record);
+                  }
+                }}
+                className={`rounded-2xl border p-3 transition focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
+                  selected
+                    ? "border-blue-200 bg-blue-50/85 dark:border-blue-400/25 dark:bg-blue-500/10"
+                    : "border-[#e1ebf7] bg-white/80 dark:border-white/[0.08] dark:bg-white/[0.035]"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-black text-slate-800 dark:text-white">
+                      {formatRecordDate(record.startTime, dateTimeFormat)}
+                    </p>
+                    <p className="mt-1 font-mono text-xs font-bold text-slate-500 dark:text-slate-400">
+                      {formatTime(record.startTime)} ~ {formatTime(record.endTime)}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    {canDelete ? (
+                      <input
+                        type="checkbox"
+                        aria-label={`${formatRecordDate(record.startTime, dateTimeFormat)} 湲곕줉 ?좏깮`}
+                        checked={selected}
+                        onChange={() => toggleRecord(record.id)}
+                        onClick={(event) => event.stopPropagation()}
+                        className="h-4 w-4 accent-blue-600"
+                      />
+                    ) : null}
+                    <button
+                      type="button"
+                      aria-label="湲곕줉 ?섏젙"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setEditingRecord(record);
+                      }}
+                      className="icon-button h-9 w-9"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <CausePills labels={recordCauses} causes={causes} />
+                  <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-black text-slate-700 dark:bg-white/[0.08] dark:text-slate-200">
+                    {formatDuration(record.durationSeconds)}
+                  </span>
+                </div>
+
+                <p className="mt-3 line-clamp-2 break-words text-sm font-medium leading-5 text-slate-500 dark:text-slate-400">
+                  {record.memo || "硫붾え ?놁쓬"}
+                </p>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="hidden overflow-x-auto px-5 pb-5 pt-3 md:block">
           <table className="w-full min-w-[1040px] text-left text-sm">
             <thead className="rounded-xl bg-[#f7faff] text-xs font-black text-[#52698c] dark:bg-white/[0.04] dark:text-slate-300">
               <tr>
@@ -214,6 +286,7 @@ function RecentRecordsTable({
             </tbody>
           </table>
         </div>
+        </>
       ) : (
         <div className="grid min-h-[220px] place-items-center bg-slate-50/70 px-4 text-center dark:bg-white/[0.02]">
           <div>
@@ -323,7 +396,7 @@ function RecordDetailModal({
   const modal = (
     <div className="fixed inset-0 z-[1000] overflow-y-auto bg-slate-950/45 px-4 py-6 backdrop-blur-sm sm:py-10">
       <div className="flex min-h-full items-start justify-center sm:items-center">
-        <section className="card max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto p-5 sm:max-h-[calc(100vh-5rem)]">
+        <section className="card max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto p-4 sm:max-h-[calc(100vh-5rem)] sm:p-5">
           <div className="mb-5 flex items-start justify-between gap-3">
             <div>
               <h2 className="text-xl font-black text-slate-950 dark:text-white">기록 상세</h2>

@@ -42,7 +42,7 @@ function DeletePasswordModal({
   return createPortal(
     <div className="fixed inset-0 z-[1100] overflow-y-auto bg-slate-950/50 px-4 py-6 backdrop-blur-sm sm:py-10">
       <div className="flex min-h-full items-center justify-center">
-        <form onSubmit={handleSubmit} className="card w-full max-w-md p-5">
+        <form onSubmit={handleSubmit} className="card w-full max-w-md p-4 sm:p-5">
           <div className="mb-5 flex items-start justify-between gap-3">
             <div className="flex items-start gap-3">
               <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-300">

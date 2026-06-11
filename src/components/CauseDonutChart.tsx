@@ -17,7 +17,7 @@ function CauseDonutChart({ records, causes, theme }: CauseDonutChartProps) {
     <ChartCard title="원인별 비중 (이번 기간)" description="선택 기간의 원인별 기록 수와 비율">
       {records.length && data.length ? (
         <div className="grid gap-3 md:grid-cols-[180px_minmax(0,1fr)]">
-          <div className="relative h-52">
+          <div className="relative h-44 sm:h-52">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={data} dataKey="count" nameKey="cause" innerRadius={54} outerRadius={84} paddingAngle={3}>
@@ -46,9 +46,9 @@ function CauseDonutChart({ records, causes, theme }: CauseDonutChartProps) {
 
           <div className="space-y-3 self-center">
             {data.map((item) => (
-              <div key={item.cause} className="flex items-center gap-3 text-sm">
+              <div key={item.cause} className="flex min-w-0 items-center gap-3 text-sm">
                 <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                <span className="min-w-0 flex-1 font-bold text-slate-700 dark:text-slate-200">{item.cause}</span>
+                <span className="min-w-0 flex-1 break-words font-bold text-slate-700 dark:text-slate-200">{item.cause}</span>
                 <span className="font-black text-slate-950 dark:text-white">{item.percentage}%</span>
                 <span className="w-11 text-right text-xs font-bold text-slate-500 dark:text-slate-400">
                   {item.count}회

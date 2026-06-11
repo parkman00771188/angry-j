@@ -33,7 +33,7 @@ function EpisodeLengthChart({ records, previousRecords, range, theme }: EpisodeL
     <ChartCard title="평균 에피소드 길이 추이" description="주간 단위 평균 지속 시간">
       {records.length ? (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_170px]">
-          <div className="h-56">
+          <div className="h-48 sm:h-56">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data} margin={{ top: 14, right: 12, bottom: 0, left: -12 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke={chart.grid} />

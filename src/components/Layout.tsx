@@ -29,7 +29,7 @@ function Layout({
   return (
     <div className="min-h-screen lg:flex">
       <Sidebar view={view} onViewChange={onViewChange} />
-      <main className="min-w-0 flex-1 overflow-hidden px-4 py-5 sm:px-6 lg:px-7 xl:px-8">
+      <main className="min-w-0 flex-1 overflow-hidden px-3 py-4 sm:px-6 sm:py-5 lg:px-7 xl:px-8">
         <Header
           view={view}
           range={range}

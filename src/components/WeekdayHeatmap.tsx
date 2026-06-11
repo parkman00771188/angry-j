@@ -14,10 +14,10 @@ function WeekdayHeatmap({ records, theme }: WeekdayHeatmapProps) {
   return (
     <ChartCard title="요일 · 시간대 히트맵 (기록 수)" description="오전 8시부터 오후 8시까지의 기록 분포입니다.">
       {records.length ? (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto pb-1">
           <div
-            className="grid min-w-[560px] items-center gap-1.5"
-            style={{ gridTemplateColumns: `24px repeat(${HOUR_BUCKETS.length}, minmax(26px, 1fr))` }}
+            className="grid min-w-[500px] items-center gap-1.5 sm:min-w-[560px]"
+            style={{ gridTemplateColumns: `22px repeat(${HOUR_BUCKETS.length}, minmax(22px, 1fr))` }}
           >
             <div />
             {HOUR_BUCKETS.map((hour) => (
@@ -33,7 +33,7 @@ function WeekdayHeatmap({ records, theme }: WeekdayHeatmapProps) {
                   <div
                     key={`${day}-${cell.hour}`}
                     title={`${day} ${cell.hour}시: ${cell.count}회`}
-                    className="h-7 rounded-md border border-white/90 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.25)] dark:border-[#0b1220]"
+                    className="h-6 rounded-md border border-white/90 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.25)] dark:border-[#0b1220] sm:h-7"
                     style={{ backgroundColor: getHeatColor(cell.count, max, theme) }}
                   />
                 ))}

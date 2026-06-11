@@ -16,7 +16,7 @@
   }
 
   body {
-    @apply m-0 bg-[#eaf3ff] text-slate-950 transition-colors duration-300 dark:bg-[#020617] dark:text-slate-50;
+    @apply m-0 overflow-x-hidden bg-[#eaf3ff] text-slate-950 transition-colors duration-300 dark:bg-[#020617] dark:text-slate-50;
   }
 
   button,
@@ -29,7 +29,7 @@
 
 @layer components {
   .card {
-    @apply rounded-[22px] border border-[#d5e3f5] bg-white/[0.96] shadow-[0_18px_45px_rgba(30,86,180,0.11)] backdrop-blur transition-colors duration-300 dark:border-white/[0.08] dark:bg-[#0b1220]/90 dark:shadow-[0_18px_55px_rgba(0,0,0,0.35)];
+    @apply min-w-0 max-w-full rounded-[18px] border border-[#d5e3f5] bg-white/[0.96] shadow-[0_14px_32px_rgba(30,86,180,0.10)] backdrop-blur transition-colors duration-300 dark:border-white/[0.08] dark:bg-[#0b1220]/90 dark:shadow-[0_18px_55px_rgba(0,0,0,0.35)] sm:rounded-[22px] sm:shadow-[0_18px_45px_rgba(30,86,180,0.11)];
   }
 
   .soft-input {
@@ -41,15 +41,15 @@
   }
 
   .primary-button {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-[#0d66ff] px-4 py-3 text-sm font-black text-white shadow-[0_14px_26px_rgba(37,99,235,0.30)] transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-[#0d66ff] px-4 py-2.5 text-sm font-black text-white shadow-[0_14px_26px_rgba(37,99,235,0.30)] transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-400 sm:py-3;
   }
 
   .secondary-button {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-black text-slate-700 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-slate-200 dark:hover:bg-white/[0.1];
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm font-black text-slate-700 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-slate-200 dark:hover:bg-white/[0.1] sm:py-3;
   }
 
   .danger-button {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-black text-red-600 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300 dark:hover:bg-red-500/20;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-black text-red-600 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300 dark:hover:bg-red-500/20 sm:py-3;
   }
 }
 

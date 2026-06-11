@@ -25,7 +25,7 @@ function DailyTrendChart({ records, range, theme }: DailyTrendChartProps) {
   return (
     <ChartCard title="일별 기록 추이 (기록 수)" description="선택 기간의 날짜별 저장 기록 수">
       {records.length ? (
-        <div className="h-56">
+        <div className="h-48 sm:h-56">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 18, right: 12, bottom: 0, left: -12 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={chart.grid} />

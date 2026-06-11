@@ -148,14 +148,14 @@ function RecordInputCard({ causes, settings, onCreateRecord }: RecordInputCardPr
   };
 
   return (
-    <section className="card p-5 xl:p-6">
+    <section className="card p-4 sm:p-5 xl:p-6">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <h2 className="text-[22px] font-black tracking-tight text-slate-950 dark:text-white">기록 입력</h2>
-          <div className="mt-4 flex min-h-11 w-full items-center gap-2 rounded-xl bg-[#f3f7ff] px-4 py-2 dark:bg-white/[0.05] sm:min-w-[420px]">
+          <div className="mt-3 flex min-h-11 w-full min-w-0 flex-wrap items-center gap-2 rounded-xl bg-[#f3f7ff] px-3 py-2 dark:bg-white/[0.05] sm:mt-4 sm:px-4">
             <span className={`h-2.5 w-2.5 rounded-full ${meta.dot}`} />
             <span className={`text-sm font-black ${meta.text}`}>{meta.label}</span>
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+            <span className="min-w-0 flex-1 break-words text-xs font-semibold leading-5 text-slate-500 dark:text-slate-400">
               {status === "idle" ? "아래에서 시작 버튼을 눌러 기록을 시작하세요." : formatClockDuration(elapsedSeconds)}
             </span>
           </div>
@@ -179,7 +179,7 @@ function RecordInputCard({ causes, settings, onCreateRecord }: RecordInputCardPr
               type="button"
               aria-pressed={selectedCauses.includes(item.label)}
               onClick={() => toggleCause(item.label)}
-              className={`inline-flex min-w-[64px] items-center justify-center gap-1.5 rounded-xl border px-3.5 py-2 text-[13px] font-black transition ${
+              className={`inline-flex min-w-[62px] items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-[13px] font-black transition ${
                 selectedCauses.includes(item.label)
                   ? "border-blue-500 bg-[#0d66ff] text-white shadow-[0_10px_24px_rgba(37,99,235,0.25)]"
                   : "border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-blue-500/10 dark:hover:text-blue-300"
@@ -243,8 +243,8 @@ function RecordInputCard({ causes, settings, onCreateRecord }: RecordInputCardPr
         <TimeCell label="경과 시간" value={formatClockDuration(elapsedSeconds)} />
       </div>
 
-      <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-300">
-        <Info className="h-4 w-4" />
+      <p className="mt-3 flex min-w-0 items-start gap-2 break-words text-xs font-semibold leading-5 text-blue-600 dark:text-blue-300">
+        <Info className="mt-0.5 h-4 w-4 shrink-0" />
         종료 버튼을 누르면 자동 저장되며, 최근 기록에서 수정할 수 있습니다.
       </p>
     </section>
@@ -253,9 +253,9 @@ function RecordInputCard({ causes, settings, onCreateRecord }: RecordInputCardPr
 
 function TimeCell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border-r border-slate-200 px-3 py-3 last:border-r-0 dark:border-white/[0.08]">
-      <p className="text-xs font-bold text-slate-500 dark:text-slate-400">{label}</p>
-      <p className="mt-1 font-mono text-[15px] font-black text-slate-950 dark:text-white">{value}</p>
+    <div className="min-w-0 border-r border-slate-200 px-2 py-2.5 last:border-r-0 dark:border-white/[0.08] sm:px-3 sm:py-3">
+      <p className="truncate text-[11px] font-bold text-slate-500 dark:text-slate-400 sm:text-xs">{label}</p>
+      <p className="mt-1 truncate font-mono text-[12px] font-black text-slate-950 dark:text-white sm:text-[15px]">{value}</p>
     </div>
   );
 }

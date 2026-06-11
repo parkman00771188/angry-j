@@ -8,9 +8,9 @@ type ChartCardProps = {
 
 export function ChartCard({ title, description, children }: ChartCardProps) {
   return (
-    <section className="card p-5">
-      <div className="mb-4">
-        <h2 className="text-[17px] font-black text-slate-950 dark:text-white">{title}</h2>
+    <section className="card p-4 sm:p-5">
+      <div className="mb-3 sm:mb-4">
+        <h2 className="break-keep text-base font-black text-slate-950 dark:text-white sm:text-[17px]">{title}</h2>
         {description ? (
           <p className="mt-1 text-xs font-semibold text-[#6b7f9f] dark:text-slate-400">{description}</p>
         ) : null}
@@ -22,7 +22,7 @@ export function ChartCard({ title, description, children }: ChartCardProps) {
 
 export function EmptyChart({ message }: { message: string }) {
   return (
-    <div className="grid h-56 place-items-center rounded-2xl border border-dashed border-[#d7e3f3] bg-[#f8fbff] text-center text-sm font-bold text-slate-500 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-slate-400">
+    <div className="grid h-44 place-items-center rounded-2xl border border-dashed border-[#d7e3f3] bg-[#f8fbff] px-4 text-center text-sm font-bold text-slate-500 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-slate-400 sm:h-56">
       {message}
     </div>
   );
