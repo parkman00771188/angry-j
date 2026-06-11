@@ -78,7 +78,7 @@ function EditRecordModal({ record, causes, onClose, onUpdate, onDelete, allowDel
   };
 
   const handleDelete = () => {
-    if (onDelete && window.confirm("이 기록을 삭제할까요? 삭제한 기록은 되돌릴 수 없습니다.")) {
+    if (onDelete) {
       onDelete(record.id);
     }
   };

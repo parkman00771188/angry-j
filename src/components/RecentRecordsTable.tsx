@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { ArrowRight, CheckCircle2, Pencil, Trash2, X } from "lucide-react";
 import { formatDate, formatDuration, formatTime, getCauseColor, getRecordCauses } from "../lib/anger";
 import { AngerEpisodeRecord, AppSettings, CauseOption } from "../types";
+import DeletePasswordModal from "./DeletePasswordModal";
 import EditRecordModal from "./EditRecordModal";
 
 type RecentRecordsTableProps = {
@@ -15,6 +16,10 @@ type RecentRecordsTableProps = {
   maxRows?: number;
   allowDelete?: boolean;
   onViewAll?: () => void;
+};
+
+type PendingDelete = {
+  ids: string[];
 };
 
 function RecentRecordsTable({
@@ -31,6 +36,7 @@ function RecentRecordsTable({
   const [editingRecord, setEditingRecord] = useState<AngerEpisodeRecord | null>(null);
   const [viewingRecord, setViewingRecord] = useState<AngerEpisodeRecord | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(null);
   const sorted = useMemo(
     () => [...records].sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()),
     [records],
@@ -57,17 +63,26 @@ function RecentRecordsTable({
       return;
     }
 
-    if (!window.confirm(`선택한 기록 ${selectedIds.length}개를 삭제할까요? 삭제한 기록은 되돌릴 수 없습니다.`)) {
+    setPendingDelete({ ids: [...selectedIds] });
+  };
+
+  const confirmPendingDelete = () => {
+    if (!pendingDelete) {
       return;
     }
 
+    const idSet = new Set(pendingDelete.ids);
+
     if (onDeleteRecords) {
-      onDeleteRecords(selectedIds);
+      onDeleteRecords(pendingDelete.ids);
     } else if (onDeleteRecord) {
-      selectedIds.forEach(onDeleteRecord);
+      pendingDelete.ids.forEach(onDeleteRecord);
     }
 
-    setSelectedIds([]);
+    setSelectedIds((current) => current.filter((id) => !idSet.has(id)));
+    setEditingRecord((current) => (current && idSet.has(current.id) ? null : current));
+    setViewingRecord((current) => (current && idSet.has(current.id) ? null : current));
+    setPendingDelete(null);
   };
 
   return (
@@ -220,8 +235,7 @@ function RecentRecordsTable({
             setEditingRecord(null);
           }}
           onDelete={(id) => {
-            onDeleteRecord?.(id);
-            setEditingRecord(null);
+            setPendingDelete({ ids: [id] });
           }}
           allowDelete={canDelete}
         />
@@ -237,6 +251,20 @@ function RecentRecordsTable({
             setViewingRecord(null);
             setEditingRecord(viewingRecord);
           }}
+        />
+      ) : null}
+
+      {pendingDelete ? (
+        <DeletePasswordModal
+          title="기록 삭제"
+          description={
+            pendingDelete.ids.length === 1
+              ? "이 기록을 삭제하려면 비밀번호를 입력하세요."
+              : `선택한 기록 ${pendingDelete.ids.length}개를 삭제하려면 비밀번호를 입력하세요.`
+          }
+          confirmLabel={pendingDelete.ids.length === 1 ? "삭제" : `${pendingDelete.ids.length}개 삭제`}
+          onCancel={() => setPendingDelete(null)}
+          onConfirm={confirmPendingDelete}
         />
       ) : null}
     </section>
