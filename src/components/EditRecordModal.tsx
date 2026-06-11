@@ -26,7 +26,7 @@ const minuteSecondOptions = Array.from({ length: 60 }, (_, value) => String(valu
 function EditRecordModal({ record, causes, onClose, onUpdate, onDelete, allowDelete = true }: EditRecordModalProps) {
   const [selectedCauses, setSelectedCauses] = useState(() => getRecordCauses(record));
   const [memo, setMemo] = useState(record.memo ?? "");
-  const [startTime, setStartTime] = useState(() => toDateTimeParts(record.startTime));
+  const [startTime, setStartTimeState] = useState(() => toDateTimeParts(record.startTime));
   const [endTime, setEndTime] = useState(() => toDateTimeParts(record.endTime));
   const [error, setError] = useState("");
 
@@ -36,6 +36,19 @@ function EditRecordModal({ record, causes, onClose, onUpdate, onDelete, allowDel
     Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())
       ? 0
       : Math.max(0, Math.round((endDate.getTime() - startDate.getTime()) / 1000));
+
+  const setStartTime = (nextTime: DateTimeParts) => {
+    const dayDelta = getDayDelta(startTime.date, nextTime.date);
+
+    setStartTimeState(nextTime);
+
+    if (dayDelta !== 0) {
+      setEndTime((current) => ({
+        ...current,
+        date: shiftDateValue(current.date, dayDelta),
+      }));
+    }
+  };
 
   const handleSave = () => {
     const start = toDate(startTime);
@@ -204,6 +217,28 @@ function toDateTimeParts(value: string | Date): DateTimeParts {
 
 function toDate(value: DateTimeParts) {
   return new Date(`${value.date}T${value.hour}:${value.minute}:${value.second}`);
+}
+
+function getDayDelta(previousDate: string, nextDate: string) {
+  const previous = new Date(`${previousDate}T00:00:00`);
+  const next = new Date(`${nextDate}T00:00:00`);
+
+  if (Number.isNaN(previous.getTime()) || Number.isNaN(next.getTime())) {
+    return 0;
+  }
+
+  return Math.round((next.getTime() - previous.getTime()) / 86400000);
+}
+
+function shiftDateValue(value: string, dayDelta: number) {
+  const date = new Date(`${value}T00:00:00`);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  date.setDate(date.getDate() + dayDelta);
+  return dateInputValue(date);
 }
 
 function DateTimeField({
