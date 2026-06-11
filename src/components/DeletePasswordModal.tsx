@@ -1,8 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { LockKeyhole, X } from "lucide-react";
-
-const DELETE_PASSWORD = "admin123!@#";
+import { isAdminPassword } from "../lib/adminAuth";
 
 type DeletePasswordModalProps = {
   title?: string;
@@ -30,7 +29,7 @@ function DeletePasswordModal({
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (password !== DELETE_PASSWORD) {
+    if (!isAdminPassword(password)) {
       setError("비밀번호가 맞지 않습니다.");
       setPassword("");
       return;

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import DashboardPage from "./components/DashboardPage";
-import DeletePasswordModal from "./components/DeletePasswordModal";
 import Layout from "./components/Layout";
 import RecordsPage from "./components/RecordsPage";
+import SettingsLockPage from "./components/SettingsLockPage";
 import SettingsPage from "./components/SettingsPage";
 import {
   CAUSES_KEY,
@@ -94,7 +94,7 @@ function App() {
   const [rangeAnchor, setRangeAnchor] = useState(() => dateInputValue(new Date()));
   const [rangeMode, setRangeMode] = useState<RangeMode>("custom");
   const [mobileRecorderOpen, setMobileRecorderOpen] = useState(false);
-  const [settingsPasswordOpen, setSettingsPasswordOpen] = useState(false);
+  const [settingsUnlocked, setSettingsUnlocked] = useState(false);
   const [toast, setToast] = useState("");
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => resolveTheme(theme));
   const [sharedReady, setSharedReady] = useState(false);
@@ -328,14 +328,14 @@ function App() {
   };
 
   const changeView = (nextView: AppView) => {
-    if (nextView === "settings" && view !== "settings") {
+    if (nextView === "settings") {
+      setView("settings");
       setMobileRecorderOpen(false);
-      setSettingsPasswordOpen(true);
       return;
     }
 
     setView(nextView);
-    setSettingsPasswordOpen(false);
+    setSettingsUnlocked(false);
 
     if (nextView !== "dashboard") {
       setMobileRecorderOpen(false);
@@ -380,7 +380,7 @@ function App() {
             onDeleteRecord={deleteRecord}
             onDeleteRecords={deleteRecords}
           />
-        ) : (
+        ) : settingsUnlocked ? (
           <SettingsPage
             theme={theme}
             settings={settings}
@@ -389,6 +389,8 @@ function App() {
             onSettingsChange={setSettings}
             onCausesChange={updateCauses}
           />
+        ) : (
+          <SettingsLockPage onUnlock={() => setSettingsUnlocked(true)} />
         )}
       </Layout>
 
@@ -398,18 +400,6 @@ function App() {
         </div>
       ) : null}
 
-      {settingsPasswordOpen ? (
-        <DeletePasswordModal
-          title="설정 잠금 해제"
-          description="설정으로 이동하려면 비밀번호를 입력하세요."
-          confirmLabel="확인"
-          onCancel={() => setSettingsPasswordOpen(false)}
-          onConfirm={() => {
-            setSettingsPasswordOpen(false);
-            setView("settings");
-          }}
-        />
-      ) : null}
     </div>
   );
 }
