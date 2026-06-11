@@ -34,25 +34,42 @@ git push -u origin main
 Cloudflare 로그인 후 D1 생성:
 
 ```powershell
-npx wrangler login
-npx wrangler d1 create angry-j
+npm run cf:login
+npm run cf:project:create
+npm run cf:d1:create
 ```
 
-생성 결과의 `database_id`를 `wrangler.toml`에 넣습니다.
+`cf:d1:create`는 `wrangler.toml`의 D1 설정을 자동으로 갱신합니다. 자동 갱신이 실패하면 생성 결과의 `database_id`를 `wrangler.toml`에 직접 넣습니다.
 
 원격 D1 마이그레이션:
 
 ```powershell
-npm run d1:migrate:remote
+npm run cf:migrate
 ```
 
 Cloudflare Pages 배포:
 
 ```powershell
-npm run pages:deploy
+npm run cf:deploy
 ```
 
-Cloudflare 대시보드에서 Pages 프로젝트를 GitHub 저장소에 연결하면 이후에는 `main` 브랜치 push마다 자동 배포됩니다.
+## 자동 배포
+
+`.github/workflows/cloudflare-pages.yml`가 `main` 브랜치 push마다 아래 작업을 자동으로 실행합니다.
+
+1. `npm ci`
+2. `npm run build`
+3. `npx wrangler d1 migrations apply angry-j --remote`
+4. `npx wrangler pages deploy dist --project-name angry-j`
+
+GitHub 저장소의 Settings > Secrets and variables > Actions에 아래 secrets를 추가해야 합니다.
+
+```text
+CLOUDFLARE_ACCOUNT_ID=Cloudflare 계정 ID
+CLOUDFLARE_API_TOKEN=Cloudflare API Token
+```
+
+API Token에는 Pages 배포와 D1 수정 권한이 필요합니다.
 
 ## 보안
 
