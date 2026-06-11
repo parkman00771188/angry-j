@@ -5,5 +5,5 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "angry-j"
-database_id = "replace-with-cloudflare-d1-database-id"
+database_id = "0888ae68-f058-4f5d-9235-0da662b425c2"
 migrations_dir = "migrations"
