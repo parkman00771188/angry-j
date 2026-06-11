@@ -284,7 +284,7 @@ function App() {
       return;
     }
 
-    const anchor = new Date(`${range.start}T00:00:00`);
+    const anchor = new Date(`${range.end}T00:00:00`);
     setRange(rangeFromMode(mode, Number.isNaN(anchor.getTime()) ? new Date() : anchor));
   };
 
