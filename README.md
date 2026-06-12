@@ -2,7 +2,7 @@
 
 앵그리 J 기록 대시보드입니다. React/Vite 기반 웹앱이며, Cloudflare Pages에 배포하면 EXE 없이 브라우저에서 사용할 수 있습니다.
 
-https://angryj.pages.dev
+https://angry-j.pages.dev/
 
 
 
