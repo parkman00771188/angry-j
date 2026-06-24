@@ -189,10 +189,14 @@ function Header({
 
         <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:gap-3 xl:w-auto">
           {showRangeControls ? (
-            <div className="flex min-w-0 flex-[1_1_0] flex-wrap items-center gap-2 rounded-[14px] border border-[#d4e1f2] bg-white px-3 py-2.5 shadow-[0_10px_24px_rgba(30,86,180,0.12)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:basis-auto sm:px-4 sm:py-3">
+            <div
+              className={`flex min-w-0 flex-wrap items-center gap-2 rounded-[14px] border border-[#d4e1f2] bg-white px-3 py-2.5 shadow-[0_10px_24px_rgba(30,86,180,0.12)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:basis-auto sm:px-4 sm:py-3 ${
+                rangeMode === "weekday" ? "w-auto flex-none" : "flex-[1_1_0]"
+              }`}
+            >
               <CalendarDays className="h-4 w-4 text-slate-500 dark:text-slate-400" />
               {rangeMode === "weekday" ? (
-                <div className="grid min-w-[252px] flex-1 grid-cols-7 gap-1">
+                <div className="grid w-max grid-cols-5 gap-1">
                   {WEEKDAY_FILTER_OPTIONS.map((day) => (
                     <button
                       key={day.value}
