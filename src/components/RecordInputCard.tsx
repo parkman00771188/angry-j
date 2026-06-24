@@ -19,6 +19,8 @@ const statusMeta: Record<RecorderStatus, { label: string; dot: string; text: str
   paused: { label: "일시정지", dot: "bg-amber-500", text: "text-amber-600 dark:text-amber-300" },
 };
 
+const MEMO_MAX_LENGTH = 1000;
+
 function RecordInputCard({ causes, settings, onCreateRecord }: RecordInputCardProps) {
   const defaultCause = causes[0]?.label ?? "기타";
   const [status, setStatus] = useState<RecorderStatus>("idle");
@@ -199,7 +201,7 @@ function RecordInputCard({ causes, settings, onCreateRecord }: RecordInputCardPr
         <div className="relative mt-2">
           <textarea
             id="episode-memo"
-            maxLength={300}
+            maxLength={MEMO_MAX_LENGTH}
             value={memo}
             onChange={(event) => setMemo(event.target.value)}
             placeholder="기록 상황에 대한 메모를 입력하세요..."
@@ -207,7 +209,7 @@ function RecordInputCard({ causes, settings, onCreateRecord }: RecordInputCardPr
             className="soft-input min-h-[88px] w-full resize-none pb-8"
           />
           <span className="absolute bottom-3 right-3 text-xs font-bold text-slate-400">
-            {memoLength} / 300
+            {memoLength} / {MEMO_MAX_LENGTH}
           </span>
         </div>
       </div>

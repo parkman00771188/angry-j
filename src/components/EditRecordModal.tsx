@@ -22,6 +22,7 @@ type EditRecordModalProps = {
 
 const hourOptions = Array.from({ length: 24 }, (_, hour) => String(hour).padStart(2, "0"));
 const minuteSecondOptions = Array.from({ length: 60 }, (_, value) => String(value).padStart(2, "0"));
+const MEMO_MAX_LENGTH = 1000;
 
 function EditRecordModal({ record, causes, onClose, onUpdate, onDelete, allowDelete = true }: EditRecordModalProps) {
   const [selectedCauses, setSelectedCauses] = useState(() => getRecordCauses(record));
@@ -164,7 +165,7 @@ function EditRecordModal({ record, causes, onClose, onUpdate, onDelete, allowDel
           <label className="block md:col-span-2">
             <span className="text-sm font-black text-slate-700 dark:text-slate-200">메모</span>
             <textarea
-              maxLength={300}
+              maxLength={MEMO_MAX_LENGTH}
               value={memo}
               onChange={(event) => setMemo(event.target.value)}
               rows={4}
