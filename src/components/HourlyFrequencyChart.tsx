@@ -14,7 +14,7 @@ function HourlyFrequencyChart({ records, theme }: HourlyFrequencyChartProps) {
   const chart = getChartTheme(theme);
 
   return (
-    <ChartCard title="시간대별 기록 빈도 (기록 수)" description="오전 8시부터 오후 8시까지 1시간 단위로 집계됩니다." contentClassName="mt-auto">
+    <ChartCard title="시간대별 기록 빈도 (기록 수)" description="오전 8시부터 오후 8시까지 1시간 단위로 집계됩니다." contentClassName="my-auto">
       {records.length ? (
         <div className="h-48 sm:h-56">
           <ResponsiveContainer width="100%" height="100%">

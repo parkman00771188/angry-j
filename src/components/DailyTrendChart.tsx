@@ -23,7 +23,7 @@ function DailyTrendChart({ records, range, theme }: DailyTrendChartProps) {
   const chart = getChartTheme(theme);
 
   return (
-    <ChartCard title="일별 기록 추이 (기록 수)" description="선택 기간의 날짜별 저장 기록 수" contentClassName="mt-auto">
+    <ChartCard title="일별 기록 추이 (기록 수)" description="선택 기간의 날짜별 저장 기록 수" contentClassName="my-auto">
       {records.length ? (
         <div className="h-48 sm:h-56">
           <ResponsiveContainer width="100%" height="100%">

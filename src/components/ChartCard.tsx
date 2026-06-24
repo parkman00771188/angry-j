@@ -20,7 +20,7 @@ export function ChartCard({ title, description, children, actions, contentClassN
         </div>
         {actions ? <div className="shrink-0">{actions}</div> : null}
       </div>
-      <div className={`min-w-0 ${contentClassName}`}>{children}</div>
+      <div className={`min-w-0 w-full ${contentClassName}`}>{children}</div>
     </section>
   );
 }
