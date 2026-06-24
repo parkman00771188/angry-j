@@ -49,8 +49,8 @@ function EpisodeLengthChart({ records, previousRecords, range, rangeMode, theme 
     [canUseDailyCustom],
   );
   const data = useMemo(
-    () => groupAverageDuration(weekdayRecords, range, activeBucketMode, { excludeWeekends: true }),
-    [activeBucketMode, range, weekdayRecords],
+    () => groupAverageDuration(records, range, activeBucketMode),
+    [activeBucketMode, range, records],
   );
   const currentAverage = calculateAverageDuration(weekdayRecords);
   const previousAverage = calculateAverageDuration(previousWeekdayRecords);
@@ -94,7 +94,7 @@ function EpisodeLengthChart({ records, previousRecords, range, rangeMode, theme 
         ) : null
       }
     >
-      {weekdayRecords.length ? (
+      {records.length ? (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_170px]">
           <div className="h-48 sm:h-56">
             <ResponsiveContainer width="100%" height="100%">
@@ -144,7 +144,7 @@ function EpisodeLengthChart({ records, previousRecords, range, rangeMode, theme 
           </div>
         </div>
       ) : (
-        <EmptyChart message="평일 평균 길이를 계산할 기록이 없습니다." />
+        <EmptyChart message="평균 길이를 계산할 기록이 없습니다." />
       )}
     </ChartCard>
   );
@@ -166,18 +166,18 @@ function bucketModeFromRangeMode(rangeMode: RangeMode): AverageDurationBucketMod
 
 function getChartDescription(rangeMode: RangeMode, bucketMode: AverageDurationBucketMode) {
   if (rangeMode === "week") {
-    return "선택한 주의 평일 일별 평균 지속 시간";
+    return "선택한 주의 일별 평균 지속 시간";
   }
 
   if (rangeMode === "month") {
-    return "선택한 월의 평일 기준 주별 평균 지속 시간";
+    return "선택한 월의 주별 평균 지속 시간";
   }
 
   if (rangeMode === "custom") {
-    return `평일 기준 ${bucketLabel(bucketMode)} 평균 지속 시간`;
+    return `${bucketLabel(bucketMode)} 평균 지속 시간`;
   }
 
-  return "선택한 날짜의 평일 평균 지속 시간";
+  return "선택한 날짜의 평균 지속 시간";
 }
 
 function bucketLabel(mode: AverageDurationBucketMode) {

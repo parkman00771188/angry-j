@@ -28,15 +28,13 @@ export const DEFAULT_SETTINGS: AppSettings = {
 };
 
 export const WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
-export const HEATMAP_DAYS = ["월", "화", "수", "목", "금", "토", "일"];
+export const HEATMAP_DAYS = ["월", "화", "수", "목", "금"];
 export const WEEKDAY_FILTER_OPTIONS = [
   { value: 1, label: "월" },
   { value: 2, label: "화" },
   { value: 3, label: "수" },
   { value: 4, label: "목" },
   { value: 5, label: "금" },
-  { value: 6, label: "토" },
-  { value: 0, label: "일" },
 ];
 export const HOUR_RANGE_START = 8;
 export const HOUR_RANGE_END = 20;

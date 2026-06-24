@@ -83,6 +83,10 @@ function normalizeRangeAnchor(value?: string | Date, fallback = dateInputValue(n
   return fallback;
 }
 
+function normalizeFilterWeekday(value: number) {
+  return value >= 1 && value <= 5 ? value : 1;
+}
+
 function App() {
   const [view, setView] = useState<AppView>("dashboard");
   const [records, setRecords] = useState<AngerEpisodeRecord[]>(() => readJson(RECORDS_KEY, []));
@@ -93,7 +97,7 @@ function App() {
   const [customRange, setCustomRange] = useState<DateRange>(defaultDateRange);
   const [rangeAnchor, setRangeAnchor] = useState(() => dateInputValue(new Date()));
   const [rangeMode, setRangeMode] = useState<RangeMode>("custom");
-  const [selectedWeekday, setSelectedWeekday] = useState(() => new Date().getDay());
+  const [selectedWeekday, setSelectedWeekday] = useState(() => normalizeFilterWeekday(new Date().getDay()));
   const [mobileRecorderOpen, setMobileRecorderOpen] = useState(false);
   const [settingsUnlocked, setSettingsUnlocked] = useState(false);
   const [toast, setToast] = useState("");
@@ -316,7 +320,7 @@ function App() {
     if (mode === "weekday") {
       const anchorValue = normalizeRangeAnchor(rangeAnchor);
       const anchor = new Date(`${anchorValue}T00:00:00`);
-      setSelectedWeekday(Number.isNaN(anchor.getTime()) ? new Date().getDay() : anchor.getDay());
+      setSelectedWeekday(normalizeFilterWeekday(Number.isNaN(anchor.getTime()) ? new Date().getDay() : anchor.getDay()));
       return;
     }
 
