@@ -5,11 +5,12 @@ type ChartCardProps = {
   description?: string;
   children: ReactNode;
   actions?: ReactNode;
+  contentClassName?: string;
 };
 
-export function ChartCard({ title, description, children, actions }: ChartCardProps) {
+export function ChartCard({ title, description, children, actions, contentClassName = "" }: ChartCardProps) {
   return (
-    <section className="card p-4 sm:p-5">
+    <section className="card flex h-full flex-col p-4 sm:p-5">
       <div className="mb-3 flex flex-wrap items-start justify-between gap-3 sm:mb-4">
         <div>
           <h2 className="break-keep text-base font-black text-slate-950 dark:text-white sm:text-[17px]">{title}</h2>
@@ -19,7 +20,7 @@ export function ChartCard({ title, description, children, actions }: ChartCardPr
         </div>
         {actions ? <div className="shrink-0">{actions}</div> : null}
       </div>
-      {children}
+      <div className={`min-w-0 ${contentClassName}`}>{children}</div>
     </section>
   );
 }

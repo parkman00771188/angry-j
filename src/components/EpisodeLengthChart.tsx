@@ -64,6 +64,7 @@ function EpisodeLengthChart({ records, previousRecords, range, rangeMode, theme 
     <ChartCard
       title="평균 에피소드 길이 추이"
       description={description}
+      contentClassName="mt-auto"
       actions={
         rangeMode === "custom" ? (
           <div className="grid grid-flow-col rounded-xl border border-slate-200 bg-slate-50 p-1 dark:border-white/[0.08] dark:bg-white/[0.04]">
