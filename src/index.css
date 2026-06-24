@@ -51,6 +51,45 @@
   .danger-button {
     @apply inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-black text-red-600 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300 dark:hover:bg-red-500/20 sm:py-3;
   }
+
+  .subtle-x-scrollbar {
+    scrollbar-color: rgba(148, 163, 184, 0.28) transparent;
+    scrollbar-width: thin;
+  }
+
+  .subtle-x-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .subtle-x-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .subtle-x-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.26);
+    background-clip: content-box;
+    border: 2px solid transparent;
+    border-radius: 999px;
+  }
+
+  .subtle-x-scrollbar:hover::-webkit-scrollbar-thumb {
+    background: rgba(96, 165, 250, 0.38);
+    background-clip: content-box;
+  }
+
+  .dark .subtle-x-scrollbar {
+    scrollbar-color: rgba(148, 163, 184, 0.24) transparent;
+  }
+
+  .dark .subtle-x-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.22);
+    background-clip: content-box;
+  }
+
+  .dark .subtle-x-scrollbar:hover::-webkit-scrollbar-thumb {
+    background: rgba(96, 165, 250, 0.32);
+    background-clip: content-box;
+  }
 }
 
 .theme-glow {

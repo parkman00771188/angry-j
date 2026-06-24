@@ -12,11 +12,15 @@ function WeekdayHeatmap({ records, theme }: WeekdayHeatmapProps) {
   const max = Math.max(1, ...matrix.flat().map((cell) => cell.count));
 
   return (
-    <ChartCard title="요일 · 시간대 히트맵 (기록 수)" description="오전 8시부터 오후 8시까지의 기록 분포입니다.">
+    <ChartCard
+      title="요일 · 시간대 히트맵 (기록 수)"
+      description="오전 8시부터 오후 8시까지의 기록 분포입니다."
+      contentClassName="my-auto"
+    >
       {records.length ? (
-        <div className="overflow-x-auto pb-1">
+        <div className="subtle-x-scrollbar overflow-x-auto pb-2">
           <div
-            className="grid min-w-[500px] items-center gap-1.5 sm:min-w-[560px]"
+            className="mx-auto grid w-full min-w-[500px] max-w-[560px] items-center gap-1.5 sm:min-w-[560px]"
             style={{ gridTemplateColumns: `22px repeat(${HOUR_BUCKETS.length}, minmax(22px, 1fr))` }}
           >
             <div />
@@ -41,7 +45,7 @@ function WeekdayHeatmap({ records, theme }: WeekdayHeatmapProps) {
             ))}
           </div>
 
-          <div className="mt-4 flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400">
+          <div className="mt-4 flex items-center justify-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400">
             <span>적음</span>
             <div className="h-2 w-32 rounded-full bg-gradient-to-r from-blue-100 to-blue-600 dark:from-blue-950 dark:to-blue-400" />
             <span>많음</span>
