@@ -30,6 +30,7 @@ function EditRecordModal({ record, causes, onClose, onUpdate, onDelete, allowDel
   const [startTime, setStartTimeState] = useState(() => toDateTimeParts(record.startTime));
   const [endTime, setEndTime] = useState(() => toDateTimeParts(record.endTime));
   const [error, setError] = useState("");
+  const memoLength = memo.length;
 
   const startDate = toDate(startTime);
   const endDate = toDate(endTime);
@@ -164,13 +165,18 @@ function EditRecordModal({ record, causes, onClose, onUpdate, onDelete, allowDel
 
           <label className="block md:col-span-2">
             <span className="text-sm font-black text-slate-700 dark:text-slate-200">메모</span>
-            <textarea
-              maxLength={MEMO_MAX_LENGTH}
-              value={memo}
-              onChange={(event) => setMemo(event.target.value)}
-              rows={4}
-              className="soft-input mt-2 w-full resize-none"
-            />
+            <div className="relative mt-2">
+              <textarea
+                maxLength={MEMO_MAX_LENGTH}
+                value={memo}
+                onChange={(event) => setMemo(event.target.value)}
+                rows={4}
+                className="soft-input w-full resize-none pb-8"
+              />
+              <span className="absolute bottom-3 right-3 text-xs font-bold text-slate-400">
+                {memoLength} / {MEMO_MAX_LENGTH}
+              </span>
+            </div>
           </label>
         </div>
 
