@@ -11,11 +11,11 @@ type CauseDonutChartProps = {
 
 function CauseDonutChart({ records, causes, theme }: CauseDonutChartProps) {
   const data = groupRecordsByCause(records, causes);
-  const totalCauseSelections = data.reduce((sum, item) => sum + item.count, 0);
+  const visibleCauseCount = data.length;
   const chart = getChartTheme(theme);
 
   return (
-    <ChartCard title="원인별 비중 (이번 기간)" description="선택 기간의 원인 선택 수와 비율">
+    <ChartCard title="원인별 비중 (이번 기간)" description="선택 기간의 원인 종류별 비율">
       {records.length && data.length ? (
         <div className="grid gap-3 md:grid-cols-[180px_minmax(0,1fr)]">
           <div className="relative h-44 sm:h-52">
@@ -39,8 +39,8 @@ function CauseDonutChart({ records, causes, theme }: CauseDonutChartProps) {
             </ResponsiveContainer>
             <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
               <div>
-                <p className="text-xs font-bold text-slate-500 dark:text-slate-400">원인 선택</p>
-                <p className="text-2xl font-black text-slate-950 dark:text-white">{totalCauseSelections}회</p>
+                <p className="text-xs font-bold text-slate-500 dark:text-slate-400">원인 종류</p>
+                <p className="text-2xl font-black text-slate-950 dark:text-white">{visibleCauseCount}개</p>
               </div>
             </div>
           </div>
