@@ -12,6 +12,7 @@ import {
   AverageDurationBucketMode,
   calculateAverageDuration,
   formatDuration,
+  formatShortDateWithWeekday,
   getDateRangeLength,
   groupAverageDuration,
 } from "../lib/anger";
@@ -104,6 +105,7 @@ function EpisodeLengthChart({ records, previousRecords, range, rangeMode, theme 
                   tick={{ fill: chart.tick, fontSize: 12 }}
                 />
                 <Tooltip
+                  labelFormatter={(label, payload) => formatEpisodeTooltipLabel(label, payload, activeBucketMode)}
                   formatter={(value, _, item) => [
                     formatDuration(item.payload.averageSeconds),
                     "평균 길이",
@@ -185,4 +187,14 @@ function bucketLabel(mode: AverageDurationBucketMode) {
   }
 
   return "일별";
+}
+
+function formatEpisodeTooltipLabel(label: unknown, payload: unknown, bucketMode: AverageDurationBucketMode) {
+  const key = Array.isArray(payload) ? payload[0]?.payload?.key : "";
+
+  if (bucketMode === "day" && typeof key === "string") {
+    return formatShortDateWithWeekday(key);
+  }
+
+  return typeof label === "string" || typeof label === "number" ? String(label) : "";
 }

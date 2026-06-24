@@ -82,6 +82,17 @@ export function formatShortDate(value: string | Date) {
   return `${date.getMonth() + 1}/${date.getDate()}`;
 }
 
+export function formatShortDateWithWeekday(value: string | Date) {
+  const date =
+    value instanceof Date
+      ? value
+      : /^\d{4}-\d{2}-\d{2}$/.test(value)
+        ? new Date(`${value}T00:00:00`)
+        : new Date(value);
+
+  return `${date.getMonth() + 1}/${date.getDate()}(${WEEKDAY_LABELS[date.getDay()]})`;
+}
+
 export function formatTime(value: string | Date) {
   const date = value instanceof Date ? value : new Date(value);
   const hour = String(date.getHours()).padStart(2, "0");
@@ -265,6 +276,28 @@ export function getMostFrequentHour(records: AngerEpisodeRecord[]) {
   return {
     ...top,
     label: `${top.hour}시`,
+    percentage: Math.round((top.count / records.length) * 100),
+  };
+}
+
+export function getMostFrequentWeekday(records: AngerEpisodeRecord[]) {
+  if (!records.length) {
+    return null;
+  }
+
+  const counts = WEEKDAY_LABELS.map((label, weekday) => ({
+    weekday,
+    label: `${label}요일`,
+    count: 0,
+  }));
+
+  records.forEach((record) => {
+    counts[new Date(record.startTime).getDay()].count += 1;
+  });
+
+  const top = counts.reduce((best, item) => (item.count > best.count ? item : best), counts[0]);
+  return {
+    ...top,
     percentage: Math.round((top.count / records.length) * 100),
   };
 }

@@ -28,6 +28,7 @@ function CauseDonutChart({ records, causes, theme }: CauseDonutChartProps) {
                 </Pie>
                 <Tooltip
                   formatter={(value, _, item) => [`${value}회`, item.payload.cause]}
+                  wrapperStyle={{ zIndex: 30, pointerEvents: "none" }}
                   contentStyle={{
                     borderRadius: 14,
                     borderColor: chart.tooltipBorder,

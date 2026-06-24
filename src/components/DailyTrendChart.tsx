@@ -8,7 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { groupRecordsByDay } from "../lib/anger";
+import { formatShortDateWithWeekday, groupRecordsByDay } from "../lib/anger";
 import { AngerEpisodeRecord, DateRange, ResolvedTheme } from "../types";
 import { ChartCard, EmptyChart, getChartTheme } from "./ChartCard";
 
@@ -32,6 +32,7 @@ function DailyTrendChart({ records, range, theme }: DailyTrendChartProps) {
               <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fill: chart.tick, fontSize: 12 }} />
               <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: chart.tick, fontSize: 12 }} />
               <Tooltip
+                labelFormatter={(_, payload) => formatDailyTooltipLabel(payload)}
                 formatter={(value) => [`${value}회`, "기록 수"]}
                 contentStyle={{
                   borderRadius: 14,
@@ -67,3 +68,8 @@ function DailyTrendChart({ records, range, theme }: DailyTrendChartProps) {
 }
 
 export default DailyTrendChart;
+
+function formatDailyTooltipLabel(payload: unknown) {
+  const key = Array.isArray(payload) ? payload[0]?.payload?.key : "";
+  return typeof key === "string" ? formatShortDateWithWeekday(key) : "";
+}

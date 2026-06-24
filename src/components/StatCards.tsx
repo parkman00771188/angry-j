@@ -1,9 +1,9 @@
-import { Activity, Clock3, PenLine, Tag, TimerReset } from "lucide-react";
+import { CalendarDays, Clock3, PenLine, Tag, TimerReset } from "lucide-react";
 import {
-  calculateAverageDuration,
   calculateTotalDuration,
   formatDuration,
   getMostFrequentHour,
+  getMostFrequentWeekday,
   getTopCause,
 } from "../lib/anger";
 import { AngerEpisodeRecord } from "../types";
@@ -15,11 +15,10 @@ type StatCardsProps = {
 
 function StatCards({ records, previousRecords }: StatCardsProps) {
   const mostHour = getMostFrequentHour(records);
+  const mostWeekday = getMostFrequentWeekday(records);
   const topCause = getTopCause(records);
   const totalDuration = calculateTotalDuration(records);
   const previousTotalDuration = calculateTotalDuration(previousRecords);
-  const averageDuration = calculateAverageDuration(records);
-  const previousAverageDuration = calculateAverageDuration(previousRecords);
 
   const cards = [
     {
@@ -51,10 +50,10 @@ function StatCards({ records, previousRecords }: StatCardsProps) {
       tone: "orange",
     },
     {
-      title: "평균 에피소드 길이",
-      value: formatDuration(averageDuration),
-      delta: formatDurationDelta(averageDuration - previousAverageDuration),
-      icon: Activity,
+      title: "가장 많이 기록된 요일",
+      value: mostWeekday ? mostWeekday.label : "-",
+      delta: mostWeekday ? `${mostWeekday.count}회 (${mostWeekday.percentage}%)` : "기록 없음",
+      icon: CalendarDays,
       tone: "blue",
     },
   ];
