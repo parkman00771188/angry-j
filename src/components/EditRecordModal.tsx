@@ -109,7 +109,7 @@ function EditRecordModal({ record, causes, onClose, onUpdate, onDelete, allowDel
           <div>
             <h2 className="text-xl font-black text-slate-950 dark:text-white">기록 수정</h2>
             <p className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">
-              원인, 메모, 시작/종료 시간을 수정할 수 있습니다.
+              날짜, 원인, 메모, 시작/종료 시간을 수정할 수 있습니다.
             </p>
           </div>
           <button type="button" onClick={onClose} className="icon-button">
@@ -258,49 +258,52 @@ function DateTimeField({
   return (
     <fieldset className="block">
       <legend className="text-sm font-black text-slate-700 dark:text-slate-200">{label}</legend>
-      <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-[minmax(0,1fr)_86px_86px_86px]">
+      <div className="mt-2 space-y-2">
         <input
+          aria-label={`${label} 날짜`}
           type="date"
           value={value.date}
           onChange={(event) => update("date", event.target.value)}
-          className="soft-input col-span-3 w-full sm:col-span-1"
+          className="soft-input w-full"
         />
-        <select
-          aria-label={`${label} 시`}
-          value={value.hour}
-          onChange={(event) => update("hour", event.target.value)}
-          className="soft-input w-full"
-        >
-          {hourOptions.map((hour) => (
-            <option key={hour} value={hour}>
-              {hour}시
-            </option>
-          ))}
-        </select>
-        <select
-          aria-label={`${label} 분`}
-          value={value.minute}
-          onChange={(event) => update("minute", event.target.value)}
-          className="soft-input w-full"
-        >
-          {minuteSecondOptions.map((minute) => (
-            <option key={minute} value={minute}>
-              {minute}분
-            </option>
-          ))}
-        </select>
-        <select
-          aria-label={`${label} 초`}
-          value={value.second}
-          onChange={(event) => update("second", event.target.value)}
-          className="soft-input w-full"
-        >
-          {minuteSecondOptions.map((second) => (
-            <option key={second} value={second}>
-              {second}초
-            </option>
-          ))}
-        </select>
+        <div className="grid grid-cols-3 gap-2">
+          <select
+            aria-label={`${label} 시`}
+            value={value.hour}
+            onChange={(event) => update("hour", event.target.value)}
+            className="soft-input w-full"
+          >
+            {hourOptions.map((hour) => (
+              <option key={hour} value={hour}>
+                {hour}시
+              </option>
+            ))}
+          </select>
+          <select
+            aria-label={`${label} 분`}
+            value={value.minute}
+            onChange={(event) => update("minute", event.target.value)}
+            className="soft-input w-full"
+          >
+            {minuteSecondOptions.map((minute) => (
+              <option key={minute} value={minute}>
+                {minute}분
+              </option>
+            ))}
+          </select>
+          <select
+            aria-label={`${label} 초`}
+            value={value.second}
+            onChange={(event) => update("second", event.target.value)}
+            className="soft-input w-full"
+          >
+            {minuteSecondOptions.map((second) => (
+              <option key={second} value={second}>
+                {second}초
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </fieldset>
   );

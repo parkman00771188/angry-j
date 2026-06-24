@@ -5,7 +5,7 @@ import {
   getPreviousDateRange,
   getRecordsByDateRange,
 } from "../lib/anger";
-import { AngerEpisodeRecord, AppSettings, CauseOption, DateRange, ResolvedTheme } from "../types";
+import { AngerEpisodeRecord, AppSettings, CauseOption, DateRange, RangeMode, ResolvedTheme } from "../types";
 import CauseDonutChart from "./CauseDonutChart";
 import DailyTrendChart from "./DailyTrendChart";
 import EpisodeLengthChart from "./EpisodeLengthChart";
@@ -20,6 +20,7 @@ type DashboardPageProps = {
   causes: CauseOption[];
   settings: AppSettings;
   range: DateRange;
+  rangeMode: RangeMode;
   resolvedTheme: ResolvedTheme;
   onCreateRecord: (record: AngerEpisodeRecord) => void;
   onUpdateRecord: (record: AngerEpisodeRecord) => void;
@@ -35,6 +36,7 @@ function DashboardPage({
   causes,
   settings,
   range,
+  rangeMode,
   resolvedTheme,
   onCreateRecord,
   onUpdateRecord,
@@ -75,6 +77,7 @@ function DashboardPage({
           records={visibleRecords}
           previousRecords={previousRecords}
           range={range}
+          rangeMode={rangeMode}
           theme={resolvedTheme}
         />
       </section>

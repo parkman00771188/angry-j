@@ -361,6 +361,7 @@ function App() {
             causes={causes}
             settings={settings}
             range={range}
+            rangeMode={rangeMode}
             resolvedTheme={resolvedTheme}
             onCreateRecord={addRecord}
             onUpdateRecord={updateRecord}

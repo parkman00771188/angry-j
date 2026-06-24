@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -8,29 +9,86 @@ import {
   YAxis,
 } from "recharts";
 import {
+  AverageDurationBucketMode,
   calculateAverageDuration,
   formatDuration,
-  groupAverageDurationByWeek,
+  getDateRangeLength,
+  groupAverageDuration,
 } from "../lib/anger";
-import { AngerEpisodeRecord, DateRange, ResolvedTheme } from "../types";
+import { AngerEpisodeRecord, DateRange, RangeMode, ResolvedTheme } from "../types";
 import { ChartCard, EmptyChart, getChartTheme } from "./ChartCard";
 
 type EpisodeLengthChartProps = {
   records: AngerEpisodeRecord[];
   previousRecords: AngerEpisodeRecord[];
   range: DateRange;
+  rangeMode: RangeMode;
   theme: ResolvedTheme;
 };
 
-function EpisodeLengthChart({ records, previousRecords, range, theme }: EpisodeLengthChartProps) {
-  const data = groupAverageDurationByWeek(records, range);
+const CUSTOM_DAILY_LIMIT_DAYS = 21;
+const bucketOptions: Array<{ mode: AverageDurationBucketMode; label: string }> = [
+  { mode: "day", label: "일별" },
+  { mode: "week", label: "주별" },
+  { mode: "month", label: "월별" },
+];
+
+function EpisodeLengthChart({ records, previousRecords, range, rangeMode, theme }: EpisodeLengthChartProps) {
+  const rangeLength = getDateRangeLength(range);
+  const canUseDailyCustom = rangeLength <= CUSTOM_DAILY_LIMIT_DAYS;
+  const defaultCustomBucketMode: AverageDurationBucketMode = canUseDailyCustom ? "day" : "week";
+  const [customBucketMode, setCustomBucketMode] = useState<AverageDurationBucketMode>(defaultCustomBucketMode);
+  const safeCustomBucketMode = canUseDailyCustom || customBucketMode !== "day" ? customBucketMode : "week";
+  const activeBucketMode = rangeMode === "custom" ? safeCustomBucketMode : bucketModeFromRangeMode(rangeMode);
+  const visibleBucketOptions = useMemo(
+    () => bucketOptions.filter((option) => canUseDailyCustom || option.mode !== "day"),
+    [canUseDailyCustom],
+  );
+  const data = useMemo(
+    () => groupAverageDuration(records, range, activeBucketMode),
+    [activeBucketMode, range, records],
+  );
   const currentAverage = calculateAverageDuration(records);
   const previousAverage = calculateAverageDuration(previousRecords);
   const diff = currentAverage - previousAverage;
   const chart = getChartTheme(theme);
+  const description = getChartDescription(rangeMode, activeBucketMode);
+
+  useEffect(() => {
+    if (rangeMode === "custom") {
+      setCustomBucketMode(defaultCustomBucketMode);
+    }
+  }, [defaultCustomBucketMode, range.end, range.start, rangeMode]);
 
   return (
-    <ChartCard title="평균 에피소드 길이 추이" description="주간 단위 평균 지속 시간">
+    <ChartCard
+      title="평균 에피소드 길이 추이"
+      description={description}
+      actions={
+        rangeMode === "custom" ? (
+          <div className="grid grid-flow-col rounded-xl border border-slate-200 bg-slate-50 p-1 dark:border-white/[0.08] dark:bg-white/[0.04]">
+            {visibleBucketOptions.map((option) => {
+              const active = option.mode === safeCustomBucketMode;
+
+              return (
+                <button
+                  key={option.mode}
+                  type="button"
+                  onClick={() => setCustomBucketMode(option.mode)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-black transition ${
+                    active
+                      ? "bg-[#0d66ff] text-white shadow-[0_8px_18px_rgba(37,99,235,0.22)]"
+                      : "text-[#52698c] hover:bg-white dark:text-slate-300 dark:hover:bg-white/[0.08]"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+        ) : null
+      }
+    >
       {records.length ? (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_170px]">
           <div className="h-48 sm:h-56">
@@ -87,3 +145,43 @@ function EpisodeLengthChart({ records, previousRecords, range, theme }: EpisodeL
 }
 
 export default EpisodeLengthChart;
+
+function bucketModeFromRangeMode(rangeMode: RangeMode): AverageDurationBucketMode {
+  if (rangeMode === "week") {
+    return "day";
+  }
+
+  if (rangeMode === "month") {
+    return "week";
+  }
+
+  return "day";
+}
+
+function getChartDescription(rangeMode: RangeMode, bucketMode: AverageDurationBucketMode) {
+  if (rangeMode === "week") {
+    return "선택한 주의 일별 평균 지속 시간";
+  }
+
+  if (rangeMode === "month") {
+    return "선택한 월의 주별 평균 지속 시간";
+  }
+
+  if (rangeMode === "custom") {
+    return `${bucketLabel(bucketMode)} 평균 지속 시간`;
+  }
+
+  return "선택한 날짜의 평균 지속 시간";
+}
+
+function bucketLabel(mode: AverageDurationBucketMode) {
+  if (mode === "month") {
+    return "월별";
+  }
+
+  if (mode === "week") {
+    return "주별";
+  }
+
+  return "일별";
+}

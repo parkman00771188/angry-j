@@ -386,6 +386,117 @@ export function groupRecordsByCause(records: AngerEpisodeRecord[], causes: Cause
     .sort((a, b) => b.count - a.count);
 }
 
+export type AverageDurationBucketMode = "day" | "week" | "month";
+
+type AverageDurationBucket = {
+  key: string;
+  label: string;
+  start: Date;
+  end: Date;
+  records: AngerEpisodeRecord[];
+};
+
+export function groupAverageDuration(records: AngerEpisodeRecord[], range: DateRange, mode: AverageDurationBucketMode) {
+  const buckets =
+    mode === "day"
+      ? getAverageDurationDayBuckets(range)
+      : mode === "month"
+        ? getAverageDurationMonthBuckets(range)
+        : getAverageDurationWeekBuckets(range);
+
+  records.forEach((record) => {
+    const time = new Date(record.startTime).getTime();
+    const bucket = buckets.find((item) => time >= item.start.getTime() && time <= item.end.getTime());
+    if (bucket) {
+      bucket.records.push(record);
+    }
+  });
+
+  return buckets.map((bucket) => {
+    const averageSeconds = calculateAverageDuration(bucket.records);
+
+    return {
+      key: bucket.key,
+      label: bucket.label,
+      averageSeconds,
+      averageMinutes: Math.round(averageSeconds / 60),
+      count: bucket.records.length,
+    };
+  });
+}
+
+function getAverageDurationDayBuckets(range: DateRange): AverageDurationBucket[] {
+  return getDatesBetween(range).map((date) => {
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+
+    return {
+      key: dateInputValue(date),
+      label: formatShortDate(date),
+      start,
+      end,
+      records: [],
+    };
+  });
+}
+
+function getAverageDurationWeekBuckets(range: DateRange): AverageDurationBucket[] {
+  const weeks: AverageDurationBucket[] = [];
+
+  const cursor = new Date(`${range.start}T00:00:00`);
+  const last = new Date(`${range.end}T23:59:59`);
+
+  while (cursor <= last) {
+    const start = new Date(cursor);
+    const end = new Date(cursor);
+    end.setDate(start.getDate() + 6);
+    end.setHours(23, 59, 59, 999);
+    if (end > last) {
+      end.setTime(last.getTime());
+    }
+
+    weeks.push({
+      key: `${dateInputValue(start)}-${dateInputValue(end)}`,
+      label: `${formatShortDate(start)}~${formatShortDate(end)}`,
+      start,
+      end,
+      records: [],
+    });
+
+    cursor.setDate(cursor.getDate() + 7);
+  }
+
+  return weeks;
+}
+
+function getAverageDurationMonthBuckets(range: DateRange): AverageDurationBucket[] {
+  const months: AverageDurationBucket[] = [];
+
+  const rangeStart = new Date(`${range.start}T00:00:00`);
+  const rangeEnd = new Date(`${range.end}T23:59:59`);
+  const cursor = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1);
+
+  while (cursor <= rangeEnd) {
+    const start = new Date(Math.max(cursor.getTime(), rangeStart.getTime()));
+    const monthEnd = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0, 23, 59, 59, 999);
+    const end = new Date(Math.min(monthEnd.getTime(), rangeEnd.getTime()));
+
+    months.push({
+      key: `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}`,
+      label: `${cursor.getFullYear()}.${cursor.getMonth() + 1}`,
+      start,
+      end,
+      records: [],
+    });
+
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+
+  return months;
+}
+
 export function groupAverageDurationByWeek(records: AngerEpisodeRecord[], range: DateRange) {
   const weeks: Array<{
     key: string;
