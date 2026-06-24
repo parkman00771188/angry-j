@@ -11,6 +11,7 @@ type RecordInputCardProps = {
   causes: CauseOption[];
   settings: AppSettings;
   onCreateRecord: (record: AngerEpisodeRecord) => void;
+  className?: string;
 };
 
 const statusMeta: Record<RecorderStatus, { label: string; dot: string; text: string }> = {
@@ -21,7 +22,7 @@ const statusMeta: Record<RecorderStatus, { label: string; dot: string; text: str
 
 const MEMO_MAX_LENGTH = 1000;
 
-function RecordInputCard({ causes, settings, onCreateRecord }: RecordInputCardProps) {
+function RecordInputCard({ causes, settings, onCreateRecord, className = "" }: RecordInputCardProps) {
   const defaultCause = causes[0]?.label ?? "기타";
   const [status, setStatus] = useState<RecorderStatus>("idle");
   const [selectedCauses, setSelectedCauses] = useState<string[]>([defaultCause]);
@@ -150,7 +151,7 @@ function RecordInputCard({ causes, settings, onCreateRecord }: RecordInputCardPr
   };
 
   return (
-    <section className="card p-4 sm:p-5 xl:p-6">
+    <section className={`card p-4 sm:p-5 xl:p-6 ${className}`}>
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-[22px] font-black tracking-tight text-slate-950 dark:text-white">기록 입력</h2>

@@ -54,16 +54,16 @@ function DashboardPage({
 
   return (
     <div className="min-w-0 space-y-4">
-      <section className="grid min-w-0 items-start gap-4 2xl:grid-cols-[minmax(520px,0.56fr)_minmax(0,1.44fr)]">
-        <div className="hidden lg:block">
-          <RecordInputCard causes={causes} settings={settings} onCreateRecord={onCreateRecord} />
+      <section className="grid min-w-0 gap-4 2xl:grid-cols-[minmax(520px,0.56fr)_minmax(0,1.44fr)]">
+        <div className="hidden h-full lg:block">
+          <RecordInputCard causes={causes} settings={settings} onCreateRecord={onCreateRecord} className="h-full" />
         </div>
-        <div className="min-w-0 space-y-4">
+        <div className="flex min-w-0 flex-col gap-4">
           <StatCards
             records={visibleRecords}
             previousRecords={previousRecords}
           />
-          <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(360px,0.86fr)]">
+          <div className="grid min-w-0 flex-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(360px,0.86fr)]">
             <DailyTrendChart records={visibleRecords} range={range} theme={resolvedTheme} />
             <HourlyFrequencyChart records={visibleRecords} theme={resolvedTheme} />
             <WeekdayHeatmap records={visibleRecords} theme={resolvedTheme} />
