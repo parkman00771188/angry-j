@@ -159,7 +159,7 @@ function Header({
       <div className="flex w-full min-w-0 flex-col items-stretch gap-3 pt-1 xl:w-auto xl:items-end">
         {showRangeControls ? (
           <div className="flex w-full min-w-0 items-center gap-2 sm:justify-end">
-          <div className={`grid min-w-0 flex-1 ${view === "records" ? "grid-cols-5" : "grid-cols-4"} rounded-[14px] border border-[#d4e1f2] bg-white p-1 shadow-[0_10px_24px_rgba(30,86,180,0.10)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:flex-none`}>
+          <div className={`grid min-w-0 flex-1 ${view === "records" ? "grid-cols-5 sm:w-[390px]" : "grid-cols-4"} rounded-[14px] border border-[#d4e1f2] bg-white p-1 shadow-[0_10px_24px_rgba(30,86,180,0.10)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:flex-none`}>
             {visibleRangeModes.map((item) => (
               <button
                 key={item.key}
@@ -190,19 +190,19 @@ function Header({
         <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:justify-end sm:gap-3 xl:w-auto">
           {showRangeControls ? (
             <div
-              className={`flex min-w-0 flex-wrap items-center gap-2 rounded-[14px] border border-[#d4e1f2] bg-white px-3 py-2.5 shadow-[0_10px_24px_rgba(30,86,180,0.12)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:basis-auto sm:px-4 sm:py-3 ${
-                rangeMode === "weekday" ? "w-full flex-none sm:w-auto" : "flex-[1_1_0]"
+              className={`flex min-w-0 flex-wrap items-center gap-2 rounded-[14px] border border-[#d4e1f2] bg-white px-3 shadow-[0_10px_24px_rgba(30,86,180,0.12)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:basis-auto sm:px-4 ${
+                rangeMode === "weekday" ? "w-full flex-none py-2 sm:w-[390px] sm:py-2" : "flex-[1_1_0] py-2.5 sm:py-3"
               }`}
             >
               <CalendarDays className="h-4 w-4 text-slate-500 dark:text-slate-400" />
               {rangeMode === "weekday" ? (
-                <div className="grid flex-1 grid-cols-5 gap-1 sm:w-max sm:flex-none">
+                <div className="grid flex-1 grid-cols-5 gap-1">
                   {WEEKDAY_FILTER_OPTIONS.map((day) => (
                     <button
                       key={day.value}
                       type="button"
                       onClick={() => onWeekdayChange(day.value)}
-                      className={`rounded-[10px] px-2 py-1.5 text-xs font-black transition sm:px-3 sm:py-2 ${
+                      className={`rounded-[10px] px-2 py-1 text-xs font-black transition sm:px-3 sm:py-1.5 ${
                         selectedWeekday === day.value
                           ? "bg-[#0d66ff] text-white shadow-[0_8px_18px_rgba(37,99,235,0.22)]"
                           : "text-[#52698c] hover:bg-blue-50 dark:text-slate-300 dark:hover:bg-white/[0.08]"
