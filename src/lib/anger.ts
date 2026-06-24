@@ -93,6 +93,18 @@ export function formatShortDateWithWeekday(value: string | Date) {
   return `${date.getMonth() + 1}/${date.getDate()}(${WEEKDAY_LABELS[date.getDay()]})`;
 }
 
+export function isWeekendDate(value: string | Date) {
+  const date =
+    value instanceof Date
+      ? value
+      : /^\d{4}-\d{2}-\d{2}$/.test(value)
+        ? new Date(`${value}T00:00:00`)
+        : new Date(value);
+  const day = date.getDay();
+
+  return day === 0 || day === 6;
+}
+
 export function formatTime(value: string | Date) {
   const date = value instanceof Date ? value : new Date(value);
   const hour = String(date.getHours()).padStart(2, "0");
@@ -256,6 +268,10 @@ export function calculateAverageDuration(records: AngerEpisodeRecord[]) {
   }
 
   return Math.round(calculateTotalDuration(records) / records.length);
+}
+
+export function getWeekdayRecords(records: AngerEpisodeRecord[]) {
+  return records.filter((record) => !isWeekendDate(record.startTime));
 }
 
 export function getMostFrequentHour(records: AngerEpisodeRecord[]) {
@@ -467,6 +483,10 @@ function applyRoundedPercentages<T extends { count: number; percentage: number }
 
 export type AverageDurationBucketMode = "day" | "week" | "month";
 
+type AverageDurationOptions = {
+  excludeWeekends?: boolean;
+};
+
 type AverageDurationBucket = {
   key: string;
   label: string;
@@ -475,23 +495,32 @@ type AverageDurationBucket = {
   records: AngerEpisodeRecord[];
 };
 
-export function groupAverageDuration(records: AngerEpisodeRecord[], range: DateRange, mode: AverageDurationBucketMode) {
+export function groupAverageDuration(
+  records: AngerEpisodeRecord[],
+  range: DateRange,
+  mode: AverageDurationBucketMode,
+  options: AverageDurationOptions = {},
+) {
   const buckets =
     mode === "day"
       ? getAverageDurationDayBuckets(range)
       : mode === "month"
         ? getAverageDurationMonthBuckets(range)
         : getAverageDurationWeekBuckets(range);
+  const visibleBuckets = options.excludeWeekends && mode === "day"
+    ? buckets.filter((bucket) => !isWeekendDate(bucket.start))
+    : buckets;
+  const scopedRecords = options.excludeWeekends ? getWeekdayRecords(records) : records;
 
-  records.forEach((record) => {
+  scopedRecords.forEach((record) => {
     const time = new Date(record.startTime).getTime();
-    const bucket = buckets.find((item) => time >= item.start.getTime() && time <= item.end.getTime());
+    const bucket = visibleBuckets.find((item) => time >= item.start.getTime() && time <= item.end.getTime());
     if (bucket) {
       bucket.records.push(record);
     }
   });
 
-  return buckets.map((bucket) => {
+  return visibleBuckets.map((bucket) => {
     const averageSeconds = calculateAverageDuration(bucket.records);
 
     return {

@@ -14,6 +14,7 @@ import {
   formatDuration,
   formatShortDateWithWeekday,
   getDateRangeLength,
+  getWeekdayRecords,
   groupAverageDuration,
 } from "../lib/anger";
 import { AngerEpisodeRecord, DateRange, RangeMode, ResolvedTheme } from "../types";
@@ -41,16 +42,18 @@ function EpisodeLengthChart({ records, previousRecords, range, rangeMode, theme 
   const [customBucketMode, setCustomBucketMode] = useState<AverageDurationBucketMode>(defaultCustomBucketMode);
   const safeCustomBucketMode = canUseDailyCustom || customBucketMode !== "day" ? customBucketMode : "week";
   const activeBucketMode = rangeMode === "custom" ? safeCustomBucketMode : bucketModeFromRangeMode(rangeMode);
+  const weekdayRecords = useMemo(() => getWeekdayRecords(records), [records]);
+  const previousWeekdayRecords = useMemo(() => getWeekdayRecords(previousRecords), [previousRecords]);
   const visibleBucketOptions = useMemo(
     () => bucketOptions.filter((option) => canUseDailyCustom || option.mode !== "day"),
     [canUseDailyCustom],
   );
   const data = useMemo(
-    () => groupAverageDuration(records, range, activeBucketMode),
-    [activeBucketMode, range, records],
+    () => groupAverageDuration(weekdayRecords, range, activeBucketMode, { excludeWeekends: true }),
+    [activeBucketMode, range, weekdayRecords],
   );
-  const currentAverage = calculateAverageDuration(records);
-  const previousAverage = calculateAverageDuration(previousRecords);
+  const currentAverage = calculateAverageDuration(weekdayRecords);
+  const previousAverage = calculateAverageDuration(previousWeekdayRecords);
   const diff = currentAverage - previousAverage;
   const chart = getChartTheme(theme);
   const description = getChartDescription(rangeMode, activeBucketMode);
@@ -91,7 +94,7 @@ function EpisodeLengthChart({ records, previousRecords, range, rangeMode, theme 
         ) : null
       }
     >
-      {records.length ? (
+      {weekdayRecords.length ? (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_170px]">
           <div className="h-48 sm:h-56">
             <ResponsiveContainer width="100%" height="100%">
@@ -130,7 +133,7 @@ function EpisodeLengthChart({ records, previousRecords, range, rangeMode, theme 
           </div>
 
           <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 dark:border-blue-400/15 dark:bg-blue-500/10">
-            <p className="text-xs font-black text-slate-500 dark:text-slate-400">이번 기간 평균</p>
+            <p className="text-xs font-black text-slate-500 dark:text-slate-400">이번 기간 평일 평균</p>
             <p className="mt-3 text-2xl font-black tracking-tight text-slate-950 dark:text-white">
               {formatDuration(currentAverage)}
             </p>
@@ -141,7 +144,7 @@ function EpisodeLengthChart({ records, previousRecords, range, rangeMode, theme 
           </div>
         </div>
       ) : (
-        <EmptyChart message="평균 길이를 계산할 기록이 없습니다." />
+        <EmptyChart message="평일 평균 길이를 계산할 기록이 없습니다." />
       )}
     </ChartCard>
   );
@@ -163,18 +166,18 @@ function bucketModeFromRangeMode(rangeMode: RangeMode): AverageDurationBucketMod
 
 function getChartDescription(rangeMode: RangeMode, bucketMode: AverageDurationBucketMode) {
   if (rangeMode === "week") {
-    return "선택한 주의 일별 평균 지속 시간";
+    return "선택한 주의 평일 일별 평균 지속 시간";
   }
 
   if (rangeMode === "month") {
-    return "선택한 월의 주별 평균 지속 시간";
+    return "선택한 월의 평일 기준 주별 평균 지속 시간";
   }
 
   if (rangeMode === "custom") {
-    return `${bucketLabel(bucketMode)} 평균 지속 시간`;
+    return `평일 기준 ${bucketLabel(bucketMode)} 평균 지속 시간`;
   }
 
-  return "선택한 날짜의 평균 지속 시간";
+  return "선택한 날짜의 평일 평균 지속 시간";
 }
 
 function bucketLabel(mode: AverageDurationBucketMode) {
