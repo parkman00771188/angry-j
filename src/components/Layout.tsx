@@ -8,10 +8,12 @@ type LayoutProps = {
   view: AppView;
   range: DateRange;
   rangeMode: RangeMode;
+  selectedWeekday: number;
   resolvedTheme: ResolvedTheme;
   onViewChange: (view: AppView) => void;
   onRangeChange: (range: DateRange, anchorValue?: string | Date) => void;
   onRangeModeChange: (mode: RangeMode) => void;
+  onWeekdayChange: (weekday: number) => void;
   onThemeToggle: () => void;
   onMobileRecordInputOpen?: () => void;
 };
@@ -21,10 +23,12 @@ function Layout({
   view,
   range,
   rangeMode,
+  selectedWeekday,
   resolvedTheme,
   onViewChange,
   onRangeChange,
   onRangeModeChange,
+  onWeekdayChange,
   onThemeToggle,
   onMobileRecordInputOpen,
 }: LayoutProps) {
@@ -41,9 +45,11 @@ function Layout({
           view={view}
           range={range}
           rangeMode={rangeMode}
+          selectedWeekday={selectedWeekday}
           resolvedTheme={resolvedTheme}
           onRangeChange={onRangeChange}
           onRangeModeChange={onRangeModeChange}
+          onWeekdayChange={onWeekdayChange}
           onThemeToggle={onThemeToggle}
           onMobileRecordInputOpen={onMobileRecordInputOpen}
         />

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { getRecordsByDateRange } from "../lib/anger";
-import { AngerEpisodeRecord, AppSettings, CauseOption, DateRange } from "../types";
+import { getRecordsByDateRange, getRecordsByWeekday, WEEKDAY_LABELS } from "../lib/anger";
+import { AngerEpisodeRecord, AppSettings, CauseOption, DateRange, RangeMode } from "../types";
 import RecentRecordsTable from "./RecentRecordsTable";
 
 type RecordsPageProps = {
@@ -8,6 +8,8 @@ type RecordsPageProps = {
   causes: CauseOption[];
   settings: AppSettings;
   range: DateRange;
+  rangeMode: RangeMode;
+  selectedWeekday: number;
   onUpdateRecord: (record: AngerEpisodeRecord) => void;
   onDeleteRecord: (id: string) => void;
   onDeleteRecords: (ids: string[]) => void;
@@ -18,20 +20,26 @@ function RecordsPage({
   causes,
   settings,
   range,
+  rangeMode,
+  selectedWeekday,
   onUpdateRecord,
   onDeleteRecord,
   onDeleteRecords,
 }: RecordsPageProps) {
-  const visibleRecords = useMemo(() => getRecordsByDateRange(records, range), [records, range]);
+  const visibleRecords = useMemo(
+    () => (rangeMode === "weekday" ? getRecordsByWeekday(records, selectedWeekday) : getRecordsByDateRange(records, range)),
+    [records, range, rangeMode, selectedWeekday],
+  );
+  const filteredLabel = rangeMode === "weekday" ? `선택 요일(${WEEKDAY_LABELS[selectedWeekday]}) 기록` : "선택 기간 기록";
 
   return (
     <div className="space-y-4">
       <section className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
-        <SummaryCard label="선택 기간 기록" value={`${visibleRecords.length}개`} />
+        <SummaryCard label={filteredLabel} value={`${visibleRecords.length}개`} />
         <SummaryCard label="전체 저장 기록" value={`${records.length}개`} />
         <SummaryCard
           label="가장 최근 기록"
-          value={records[0] ? new Date(records[0].startTime).toLocaleDateString("ko-KR") : "-"}
+          value={visibleRecords[0] ? new Date(visibleRecords[0].startTime).toLocaleDateString("ko-KR") : "-"}
           compactValue
         />
       </section>

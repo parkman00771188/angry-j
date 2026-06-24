@@ -2,15 +2,24 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { CalendarDays, ChevronDown, Moon, PenLine, Sun, Wifi } from "lucide-react";
 import { AppView, DateRange, RangeMode, ResolvedTheme } from "../types";
-import { dayRangeFrom, monthRangeFrom, monthInputValue, todayRange, weekRangeFrom } from "../lib/anger";
+import {
+  dayRangeFrom,
+  monthRangeFrom,
+  monthInputValue,
+  todayRange,
+  weekRangeFrom,
+  WEEKDAY_FILTER_OPTIONS,
+} from "../lib/anger";
 
 type HeaderProps = {
   view: AppView;
   range: DateRange;
   rangeMode: RangeMode;
+  selectedWeekday: number;
   resolvedTheme: ResolvedTheme;
   onRangeChange: (range: DateRange, anchorValue?: string | Date) => void;
   onRangeModeChange: (mode: RangeMode) => void;
+  onWeekdayChange: (weekday: number) => void;
   onThemeToggle: () => void;
   onMobileRecordInputOpen?: () => void;
 };
@@ -49,9 +58,11 @@ function Header({
   view,
   range,
   rangeMode,
+  selectedWeekday,
   resolvedTheme,
   onRangeChange,
   onRangeModeChange,
+  onWeekdayChange,
   onThemeToggle,
   onMobileRecordInputOpen,
 }: HeaderProps) {
@@ -109,6 +120,7 @@ function Header({
 
   const copy = headerCopy[view];
   const showRangeControls = view !== "settings";
+  const visibleRangeModes = view === "records" ? [...rangeModes, { key: "weekday" as RangeMode, label: "요일별" }] : rangeModes;
   const showMobileRecordButton = view === "dashboard" && Boolean(onMobileRecordInputOpen);
   const ThemeIcon = resolvedTheme === "dark" ? Sun : Moon;
 
@@ -147,8 +159,8 @@ function Header({
       <div className="flex w-full min-w-0 flex-col items-stretch gap-3 pt-1 xl:w-auto xl:items-end">
         {showRangeControls ? (
           <div className="flex w-full min-w-0 items-center gap-2 sm:justify-end">
-          <div className="grid min-w-0 flex-1 grid-cols-4 rounded-[14px] border border-[#d4e1f2] bg-white p-1 shadow-[0_10px_24px_rgba(30,86,180,0.10)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:flex-none">
-            {rangeModes.map((item) => (
+          <div className={`grid min-w-0 flex-1 ${view === "records" ? "grid-cols-5" : "grid-cols-4"} rounded-[14px] border border-[#d4e1f2] bg-white p-1 shadow-[0_10px_24px_rgba(30,86,180,0.10)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:flex-none`}>
+            {visibleRangeModes.map((item) => (
               <button
                 key={item.key}
                 type="button"
@@ -179,7 +191,24 @@ function Header({
           {showRangeControls ? (
             <div className="flex min-w-0 flex-[1_1_0] flex-wrap items-center gap-2 rounded-[14px] border border-[#d4e1f2] bg-white px-3 py-2.5 shadow-[0_10px_24px_rgba(30,86,180,0.12)] dark:border-white/[0.08] dark:bg-white/[0.04] sm:basis-auto sm:px-4 sm:py-3">
               <CalendarDays className="h-4 w-4 text-slate-500 dark:text-slate-400" />
-              {rangeMode === "custom" ? (
+              {rangeMode === "weekday" ? (
+                <div className="grid min-w-[252px] flex-1 grid-cols-7 gap-1">
+                  {WEEKDAY_FILTER_OPTIONS.map((day) => (
+                    <button
+                      key={day.value}
+                      type="button"
+                      onClick={() => onWeekdayChange(day.value)}
+                      className={`rounded-[10px] px-2 py-1.5 text-xs font-black transition sm:px-3 sm:py-2 ${
+                        selectedWeekday === day.value
+                          ? "bg-[#0d66ff] text-white shadow-[0_8px_18px_rgba(37,99,235,0.22)]"
+                          : "text-[#52698c] hover:bg-blue-50 dark:text-slate-300 dark:hover:bg-white/[0.08]"
+                      }`}
+                    >
+                      {day.label}
+                    </button>
+                  ))}
+                </div>
+              ) : rangeMode === "custom" ? (
                 <>
                   <input
                     aria-label="시작 날짜"
@@ -213,7 +242,7 @@ function Header({
                   ) : null}
                 </>
               )}
-              <ChevronDown className="h-4 w-4 text-slate-400" />
+              {rangeMode === "weekday" ? null : <ChevronDown className="h-4 w-4 text-slate-400" />}
             </div>
           ) : null}
 

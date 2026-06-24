@@ -93,6 +93,7 @@ function App() {
   const [customRange, setCustomRange] = useState<DateRange>(defaultDateRange);
   const [rangeAnchor, setRangeAnchor] = useState(() => dateInputValue(new Date()));
   const [rangeMode, setRangeMode] = useState<RangeMode>("custom");
+  const [selectedWeekday, setSelectedWeekday] = useState(() => new Date().getDay());
   const [mobileRecorderOpen, setMobileRecorderOpen] = useState(false);
   const [settingsUnlocked, setSettingsUnlocked] = useState(false);
   const [toast, setToast] = useState("");
@@ -312,6 +313,13 @@ function App() {
   const changeRangeMode = (mode: RangeMode) => {
     setRangeMode(mode);
 
+    if (mode === "weekday") {
+      const anchorValue = normalizeRangeAnchor(rangeAnchor);
+      const anchor = new Date(`${anchorValue}T00:00:00`);
+      setSelectedWeekday(Number.isNaN(anchor.getTime()) ? new Date().getDay() : anchor.getDay());
+      return;
+    }
+
     if (mode === "custom") {
       setRange(customRange);
       setRangeAnchor((current) => normalizeRangeAnchor(customRange.end, current));
@@ -345,6 +353,10 @@ function App() {
   };
 
   const changeView = (nextView: AppView) => {
+    if (nextView === "dashboard" && rangeMode === "weekday") {
+      setRangeMode("custom");
+    }
+
     if (nextView === "settings") {
       setView("settings");
       setMobileRecorderOpen(false);
@@ -365,10 +377,12 @@ function App() {
         view={view}
         range={range}
         rangeMode={rangeMode}
+        selectedWeekday={selectedWeekday}
         resolvedTheme={resolvedTheme}
         onViewChange={changeView}
         onRangeChange={changeRange}
         onRangeModeChange={changeRangeMode}
+        onWeekdayChange={setSelectedWeekday}
         onThemeToggle={toggleTheme}
         onMobileRecordInputOpen={() => setMobileRecorderOpen(true)}
       >
@@ -394,6 +408,8 @@ function App() {
             causes={causes}
             settings={settings}
             range={range}
+            rangeMode={rangeMode}
+            selectedWeekday={selectedWeekday}
             onUpdateRecord={updateRecord}
             onDeleteRecord={deleteRecord}
             onDeleteRecords={deleteRecords}

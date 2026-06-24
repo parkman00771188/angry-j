@@ -21,7 +21,7 @@ export type ThemePreference = "light" | "dark" | "system";
 export type ResolvedTheme = "light" | "dark";
 export type AppView = "dashboard" | "records" | "settings";
 export type RecorderStatus = "idle" | "recording" | "paused";
-export type RangeMode = "day" | "week" | "month" | "custom";
+export type RangeMode = "day" | "week" | "month" | "custom" | "weekday";
 
 export type DateRange = {
   start: string;
