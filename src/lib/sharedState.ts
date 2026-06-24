@@ -8,6 +8,14 @@ export type SharedState = {
   updatedAt?: string;
 };
 
+export type SharedBackup = {
+  id: string;
+  createdAt: string;
+  stateUpdatedAt: string;
+  recordCount: number;
+  causeCount: number;
+};
+
 export const CLOUD_SECRET_KEY = "anger-j-cloud-secret";
 
 function getRequestHeaders() {
@@ -52,4 +60,69 @@ export async function saveSharedState(state: Omit<SharedState, "initialized" | "
   }
 
   return (await response.json()) as SharedState;
+}
+
+export async function fetchSharedBackups(signal?: AbortSignal) {
+  const response = await fetch("/api/backups", {
+    cache: "no-store",
+    headers: getRequestHeaders(),
+    signal,
+  });
+
+  if (!response.ok || !response.headers.get("content-type")?.includes("application/json")) {
+    return null;
+  }
+
+  return (await response.json()) as { backups: SharedBackup[] };
+}
+
+export async function createSharedBackup(state: Omit<SharedState, "initialized" | "updatedAt">) {
+  const response = await fetch("/api/backups", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getRequestHeaders(),
+    },
+    body: JSON.stringify(state),
+  });
+
+  if (!response.ok || !response.headers.get("content-type")?.includes("application/json")) {
+    return null;
+  }
+
+  return (await response.json()) as { backup: SharedBackup; backups: SharedBackup[] };
+}
+
+export async function restoreSharedBackup(id: string) {
+  const response = await fetch("/api/backups", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...getRequestHeaders(),
+    },
+    body: JSON.stringify({ id }),
+  });
+
+  if (!response.ok || !response.headers.get("content-type")?.includes("application/json")) {
+    return null;
+  }
+
+  return (await response.json()) as { state: SharedState; backups: SharedBackup[] };
+}
+
+export async function deleteSharedBackup(id: string) {
+  const response = await fetch("/api/backups", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...getRequestHeaders(),
+    },
+    body: JSON.stringify({ id }),
+  });
+
+  if (!response.ok || !response.headers.get("content-type")?.includes("application/json")) {
+    return null;
+  }
+
+  return (await response.json()) as { backups: SharedBackup[] };
 }

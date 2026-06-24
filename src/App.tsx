@@ -327,6 +327,23 @@ function App() {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
+  const restoreStateFromBackup = (state: SharedState) => {
+    const restored = normalizeSharedState(state);
+
+    if (!restored) {
+      return;
+    }
+
+    skipNextSharedSaveRef.current = true;
+    lastSharedUpdatedAtRef.current = restored.updatedAt;
+    setSharedAvailable(true);
+    setSharedReady(true);
+    setRecords(restored.records);
+    setCauses(restored.causes);
+    setSettings(restored.settings);
+    setToast("백업에서 기록을 복원했습니다.");
+  };
+
   const changeView = (nextView: AppView) => {
     if (nextView === "settings") {
       setView("settings");
@@ -384,11 +401,13 @@ function App() {
         ) : settingsUnlocked ? (
           <SettingsPage
             theme={theme}
+            records={records}
             settings={settings}
             causes={causes}
             onThemeChange={setTheme}
             onSettingsChange={setSettings}
             onCausesChange={updateCauses}
+            onStateRestore={restoreStateFromBackup}
           />
         ) : (
           <SettingsLockPage onUnlock={() => setSettingsUnlocked(true)} />

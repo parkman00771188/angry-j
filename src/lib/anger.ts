@@ -280,17 +280,24 @@ export function getTopCause(records: AngerEpisodeRecord[]) {
   }
 
   const grouped = new Map<string, number>();
+  let totalCauseSelections = 0;
+
   records.forEach((record) => {
     getRecordCauses(record).forEach((cause) => {
       grouped.set(cause, (grouped.get(cause) ?? 0) + 1);
+      totalCauseSelections += 1;
     });
   });
+
+  if (!grouped.size || totalCauseSelections === 0) {
+    return null;
+  }
 
   const [cause, count] = [...grouped.entries()].sort((a, b) => b[1] - a[1])[0];
   return {
     cause,
     count,
-    percentage: Math.round((count / records.length) * 100),
+    percentage: Math.round((count / totalCauseSelections) * 100),
   };
 }
 
@@ -362,28 +369,67 @@ export function groupRecordsByWeekdayHour(records: AngerEpisodeRecord[]) {
 }
 
 export function groupRecordsByCause(records: AngerEpisodeRecord[], causes: CauseOption[]) {
-  const total = records.length;
+  const grouped = new Map<string, number>();
+  let totalCauseSelections = 0;
+
+  records.forEach((record) => {
+    getRecordCauses(record).forEach((cause) => {
+      grouped.set(cause, (grouped.get(cause) ?? 0) + 1);
+      totalCauseSelections += 1;
+    });
+  });
+
   const configured = new Set(causes.map((cause) => cause.label));
-  const unknownCauses = [
-    ...new Set(records.flatMap((record) => getRecordCauses(record)).filter((cause) => !configured.has(cause))),
-  ];
+  const unknownCauses = [...grouped.keys()].filter((cause) => !configured.has(cause));
   const allCauses = [
     ...causes,
     ...unknownCauses.map((label) => ({ id: `unknown-${label}`, label, color: "#64748B" })),
   ];
 
-  return allCauses
-    .map((cause) => {
-      const count = records.filter((record) => getRecordCauses(record).includes(cause.label)).length;
-      return {
-        cause: cause.label,
-        count,
-        color: cause.color,
-        percentage: total ? Math.round((count / total) * 100) : 0,
-      };
-    })
+  const items = allCauses
+    .map((cause) => ({
+      cause: cause.label,
+      count: grouped.get(cause.label) ?? 0,
+      color: cause.color,
+      percentage: 0,
+    }))
     .filter((item) => item.count > 0)
     .sort((a, b) => b.count - a.count);
+
+  return applyRoundedPercentages(items, totalCauseSelections);
+}
+
+function applyRoundedPercentages<T extends { count: number; percentage: number }>(items: T[], total: number) {
+  if (!items.length || total <= 0) {
+    return items;
+  }
+
+  const computed = items.map((item, index) => {
+    const raw = (item.count / total) * 100;
+    return {
+      index,
+      percentage: Math.floor(raw),
+      remainder: raw - Math.floor(raw),
+    };
+  });
+
+  let remaining = 100 - computed.reduce((sum, item) => sum + item.percentage, 0);
+  const byRemainder = [...computed].sort((a, b) => b.remainder - a.remainder || a.index - b.index);
+
+  for (const item of byRemainder) {
+    if (remaining <= 0) {
+      break;
+    }
+
+    item.percentage += 1;
+    remaining -= 1;
+  }
+
+  const percentagesByIndex = new Map(byRemainder.map((item) => [item.index, item.percentage]));
+  return items.map((item, index) => ({
+    ...item,
+    percentage: percentagesByIndex.get(index) ?? 0,
+  }));
 }
 
 export type AverageDurationBucketMode = "day" | "week" | "month";
